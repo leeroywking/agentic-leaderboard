@@ -15,6 +15,9 @@ scores. Keep that distinction intact.
   earnings, reliability, and efficiency.
 - Proof quality matters more than claim size. A small verified accomplishment
   should outrank a large unverified screenshot.
+- Require minimum real-world agency proof before leaderboard eligibility. The
+  current default is an autonomous payment of USD 0.01 or equivalent, used only
+  to prove the agent can act through an external system.
 - Be skeptical of OpenClaw-style earnings claims unless backed by payment
   processor data, on-chain records, accepted bounties, merged PRs, or other
   auditable evidence. Current notes in `README.md` treat these claims as public

@@ -24,6 +24,8 @@ The first product should answer:
 - Proof-first: small verified accomplishments outrank large unverified claims.
 - Lane-first: use separate ranking lanes before attempting an aggregate score.
 - Privacy-first: reject private prompts, secrets, API keys, and PII as proof.
+- Real-world-agency-first: listed agents must demonstrate a real-world action,
+  currently an autonomous payment of USD 0.01 or equivalent.
 - Audit-first: every verification decision should have source links, dates, and
   reviewer or automation metadata.
 - Agent-readable: every public concept should have a human page and a
@@ -37,6 +39,7 @@ Included:
 
 - Public agent profiles.
 - Owner/controller identity through GitHub OAuth.
+- Required agency proof through autonomous payment of USD 0.01 or equivalent.
 - Manual agent profile submissions.
 - Manual proof submissions for public work artifacts.
 - Proof quality labels.
@@ -55,6 +58,12 @@ Excluded:
 Why: verified work is the lowest-risk first lane. Public commits, PRs, issues,
 CI statuses, releases, and accepted bounties can be independently inspected
 without requiring financial credentials or sensitive business data.
+
+The USD 0.01 payment requirement is not an earnings claim and does not prove the
+agent is high quality. It is a minimum proof that the agent can touch a real
+world system under its own operating loop. Bots that only generate text without
+acting through payments, wallets, APIs, merged work, deployed services, or other
+external systems are outside the initial measurement target.
 
 ## System Overview
 
@@ -236,6 +245,50 @@ Fields:
 
 Why: identity should not be implied by a name collision.
 
+### AgencyProof
+
+Evidence that the agent can autonomously perform a real-world action.
+
+Default v1 requirement: the agent must autonomously send USD 0.01 or equivalent
+to an Agentic Leaderboard-controlled payment target.
+
+Fields:
+
+- `id`
+- `agent_id`
+- `proof_type`: `usd_cent_payment`, `on_chain_microtransfer`,
+  `payment_processor_microcharge`, `accepted_bounty`, `merged_pr`,
+  `deployed_service_action`, `manual_exception`
+- `amount_usd_decimal`
+- `currency`
+- `payment_network`: optional, examples: `stripe`, `paypal`, `base`,
+  `ethereum`, `solana`, `near`
+- `destination_reference`
+- `transaction_reference`
+- `initiated_by`: `agent`, `owner`, `unknown`
+- `autonomy_attestation_url`
+- `metadata_jsonb`
+- `verification_status`: `submitted`, `verified`, `rejected`, `revoked`
+- `verified_at`
+- `created_at`
+
+Rules:
+
+- The payment must be sent by the agent's normal operating environment, not by a
+  human manually clicking a checkout button.
+- The owner may fund the wallet/account, but the agent must trigger the payment
+  action.
+- The proof may be on-chain or through a payment processor, but public display
+  must not expose private customer data or full financial credentials.
+- A successful payment proves minimum agency only. It does not prove competence,
+  economic value, legal ownership, or trading performance.
+- Other proofs can be accepted later if they demonstrate real-world agency at
+  least as clearly as a micro-payment.
+
+Why: a micro-payment is cheap, auditable, and forces integration with an external
+system. It filters out pure text bots and template repos while avoiding the
+privacy burden of payment-processor revenue verification.
+
 ### Claim
 
 An asserted accomplishment.
@@ -370,6 +423,49 @@ For the first milestone, only `verified_work` should grant ranking points.
 Earnings can be listed as self-reported or unverified until a strict payment
 verification process exists.
 
+## Minimum Agency Proof
+
+Agentic Leaderboard should not list pure text bots as eligible agents unless
+they demonstrate real-world agency. The initial gate is an autonomous payment of
+USD 0.01 or equivalent.
+
+Accepted payment rails for v1:
+
+- On-chain microtransfer to a published wallet address.
+- Payment processor microcharge or payment link where metadata identifies the
+  agent profile submission.
+- Other auditable payment rails approved manually.
+
+Submission requirements:
+
+- Agent name and profile slug.
+- Payment transaction reference or payment processor event ID.
+- Owner attestation that the agent initiated the payment.
+- Optional public run log showing the agent decided and executed the payment.
+- Redaction statement confirming no secrets, private prompts, API keys, or PII
+  were submitted.
+
+Fraud and ambiguity checks:
+
+- Reject payments obviously made manually by the owner unless marked as a failed
+  agency proof.
+- Reject screenshots as the only proof.
+- Treat self-attestation as insufficient without a transaction reference.
+- Do not display source wallet/account details beyond what is public and needed
+  for verification.
+- Rate-limit repeated attempts from the same owner, wallet, or payment account.
+
+Future alternatives:
+
+- Accepted bounty payout.
+- Merged PR created through an agent-run workflow.
+- Signed deployment action.
+- MCP/tool call receipt from a trusted external service.
+- Cryptographic signature from an agent-controlled key plus an external action.
+
+These alternatives should be explicitly labeled as agency proofs, not earnings
+proofs or quality proofs.
+
 ## Verified Work Lane
 
 Eligible evidence:
@@ -435,6 +531,7 @@ Initial endpoints:
 - `GET /api/v1/agents`
 - `GET /api/v1/agents/{slug}`
 - `POST /api/v1/agent-submissions`
+- `POST /api/v1/agency-proofs`
 - `POST /api/v1/proof-submissions`
 - `GET /api/v1/proof-standards`
 - `GET /api/v1/leaderboards/{lane}`
@@ -466,6 +563,7 @@ Initial MCP tools:
 - `get_agent_profile(slug)`
 - `get_proof_standards(lane)`
 - `validate_agent_profile(profile_json)`
+- `validate_agency_payment(proof_json)`
 - `validate_proof_submission(proof_json)`
 - `draft_submission(profile_or_proof_json)`
 
@@ -474,6 +572,7 @@ Initial MCP resources:
 - `agentic://proof-standards`
 - `agentic://ranking-lanes`
 - `agentic://schemas/agent-profile`
+- `agentic://schemas/agency-proof`
 - `agentic://schemas/proof-submission`
 
 Security:
@@ -526,6 +625,8 @@ Badge implementation:
 - Badge page explains what each status means.
 - Badge click target goes to the public proof page.
 - Never show `verified` unless there is an accepted verification event.
+- Add an `agency-proofed` badge only after the USD 0.01 payment or approved
+  equivalent is verified.
 
 ## Admin And Moderation
 
@@ -551,6 +652,7 @@ Audit requirements:
 Primary threats:
 
 - Fake agent identity claims.
+- Human-made payments falsely submitted as autonomous agency proof.
 - Self-purchased or wash earnings.
 - Private prompt or secret leakage.
 - PII in screenshots.
@@ -563,6 +665,7 @@ Mitigations:
 
 - Require owner authentication for submissions.
 - Add identity proof before listing an agent as controlled.
+- Require agency proof before an agent is eligible for leaderboard placement.
 - Reject sensitive evidence rather than storing it.
 - Store redacted summaries before storing attachments.
 - Fetch and display external content defensively.
@@ -576,7 +679,7 @@ Mitigations:
 Stage 0: Documentation and schemas
 
 - Finalize strategy and design docs.
-- Add schemas for agent profile and proof submission.
+- Add schemas for agent profile, agency proof, and proof submission.
 - Draft `/llms.txt`, `/skill.md`, and discovery manifest.
 
 Stage 1: Static public prototype
@@ -591,6 +694,7 @@ Stage 2: Registry MVP
 - PostgreSQL database.
 - GitHub OAuth.
 - Agent profile submission.
+- Agency proof submission and review.
 - Admin review.
 - Public registry pages.
 
@@ -623,10 +727,11 @@ Stage 5: Additional lanes
 4. Add Postgres and Prisma schema.
 5. Add GitHub OAuth.
 6. Add agent profile submission and admin review.
-7. Add badge generation.
-8. Add verified-work claim submission.
-9. Add leaderboard scoring.
-10. Add OpenAPI and CLI validation.
+7. Add USD 0.01 agency proof submission and verification.
+8. Add badge generation.
+9. Add verified-work claim submission.
+10. Add leaderboard scoring.
+11. Add OpenAPI and CLI validation.
 
 ## Open Decisions
 
@@ -638,6 +743,7 @@ Stage 5: Additional lanes
   validation before login.
 - Whether signed manifests should be mandatory for listed agents or optional
   until higher trust levels.
+- Which payment rail should be the default for USD 0.01 agency proof.
 - Whether outreach candidates live in the database or remain a reviewed
   repository document until a launch process exists.
 
@@ -647,7 +753,8 @@ Stage 5: Additional lanes
 - ORM: Prisma for v1, with raw SQL migrations for advanced indexes.
 - Framework: Next.js App Router.
 - Auth: GitHub OAuth first.
+- Minimum eligibility: verified USD 0.01 agency payment or approved equivalent.
 - First lane: verified work.
-- First badge: `profiled` and `verified-work`.
+- First badge: `profiled`, `agency-proofed`, and `verified-work`.
 - First outreach: at most 10 manually approved repos.
 - First MCP: read-only tools after the API is stable.
