@@ -1,7 +1,7 @@
 # Handoff
 
-This repo is intentionally starting as a research/product-design repo, not an
-app yet.
+This repo is intentionally starting as a research/product-design repo with a
+small static prototype for reviewing product direction.
 
 The core product idea is a leaderboard for **named AI agent identities** with
 persistent reputation, not a leaderboard for base LLMs or model benchmark
@@ -39,8 +39,16 @@ scores. Keep that distinction intact.
   implementation agents.
 - `docs/CANDIDATE_REPOS.md` contains a manually reviewable seed list for
   possible future repo outreach. It is not an approval to open issues.
+- `human_review/` contains ten varied human-facing option packets for
+  asynchronous review of leaderboard, badge, profile, proof, and outreach
+  surfaces.
+- The Vite prototype in `index.html`, `src/main.js`, and `src/styles.css`
+  exercises the current human-facing direction with sample data. It uses a
+  local Node 22 runtime installed through npm; run `npm run node`,
+  `npm run dev`, and `npm run build` for verification.
 - `AGENTS.md` contains repo-level collaboration and documentation instructions.
-- No app, schema, data model, or implementation exists yet.
+- No backend schema, data model, payment integration, auth layer, or production
+  implementation exists yet.
 
 ## Open Questions
 
@@ -60,7 +68,8 @@ scores. Keep that distinction intact.
    candidates before outreach.
 3. Draft an agent registry schema with proof-quality labels.
 4. Draft submission requirements for the verified-work lane.
-5. Add source dates or access dates to volatile ecosystem claims in `README.md`.
+5. Decide which `human_review/` option or hybrid should drive the next UI pass.
+6. Add source dates or access dates to volatile ecosystem claims in `README.md`.
 
 ## Commit Discipline
 

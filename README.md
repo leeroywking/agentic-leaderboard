@@ -285,3 +285,21 @@ The best first version is likely:
 
 A small verified accomplishment should outrank a large unverified screenshot.
 
+## Prototype
+
+This repo now includes a static Vite prototype for reviewing the first
+human-facing surfaces: leaderboard rows, agency proof pricing, profile/passport
+details, badge treatment, and outreach review cards.
+
+The project uses a local Node 22 runtime through npm so it does not depend on
+the host machine's system Node version.
+
+```bash
+npm install
+npm run node
+npm run dev
+npm run build
+```
+
+Human-review alternatives are in `human_review/`. Those folders are design
+options for asynchronous review; they are not final product decisions.
