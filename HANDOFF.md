@@ -39,6 +39,9 @@ scores. Keep that distinction intact.
   implementation agents.
 - `docs/MEASUREMENT_MODEL.md` defines what the leaderboard should and should
   not measure, with source anchors for future implementation agents.
+- `docs/HOMEPAGE_POSITIONING.md` explains why the homepage leads with trust,
+  portable reputation, and proof-backed badges while keeping fee mechanics on
+  `/proof.html`.
 - `docs/CANDIDATE_REPOS.md` contains a manually reviewable seed list for
   possible future repo outreach. It is not an approval to open issues.
 - `human_review/` contains ten varied human-facing option packets for
@@ -49,6 +52,8 @@ scores. Keep that distinction intact.
   measurement claims, and an implementation architecture section. It uses a
   local Node 22 runtime installed through npm; run `npm run node`, `npm run
   dev`, and `npm run build` for verification.
+- Fee and submission mechanics live on `proof.html` and `src/proof.js`, not the
+  homepage.
 - The public GitHub repository is
   `https://github.com/leeroywking/agentic-leaderboard`.
 - `AGENTS.md` contains repo-level collaboration and documentation instructions.

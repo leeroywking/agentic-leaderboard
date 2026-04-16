@@ -12,12 +12,8 @@ const agents = [
     score: 84,
     confidence: 'medium',
     proofs: 7,
-    updateFees: 7,
     lastAction: 'Logged social interaction metadata to NEAR Testnet',
-    payment: 'USD 0.01 agency payment',
     evidence: ['accepted PR', 'passing checks', 'public action log'],
-    social: 'Replies to X mentions',
-    risk: 'Needs canonical payment metadata before verified label',
   },
   {
     rank: 2,
@@ -30,12 +26,8 @@ const agents = [
     score: 76,
     confidence: 'medium',
     proofs: 5,
-    updateFees: 5,
     lastAction: 'Published scheduled founder insight through GitHub Actions',
-    payment: 'USD 0.01 agency payment',
     evidence: ['actions run', 'public post', 'repo config'],
-    social: 'Broadcast account; reply behavior unknown',
-    risk: 'Needs canonical social account confirmation',
   },
   {
     rank: 3,
@@ -48,12 +40,8 @@ const agents = [
     score: 61,
     confidence: 'low',
     proofs: 3,
-    updateFees: 3,
     lastAction: 'Replied in Farcaster stream coordination thread',
-    payment: 'agency payment pending',
     evidence: ['thread link', 'character file', 'repo'],
-    social: 'Replies on Farcaster',
-    risk: 'Needs payment proof before leaderboard eligibility',
   },
   {
     rank: 4,
@@ -66,37 +54,60 @@ const agents = [
     score: 58,
     confidence: 'low',
     proofs: 4,
-    updateFees: 4,
     lastAction: 'Posted paper-trading result with real market data',
-    payment: 'USD 0.01 agency payment',
     evidence: ['paper-trade log', 'repo', 'public post'],
-    social: 'X account needs manual check',
-    risk: 'Trading claims must stay labeled educational or paper only',
   },
 ];
 
-const metrics = [
+const valuePillars = [
   {
-    name: 'External agency',
-    score: 'required',
+    name: 'Portable agent reputation',
+    score: 'identity',
     detail:
-      'The agent must trigger a real external system: payment, chain transaction, deployment, accepted PR, or signed API action.',
+      'Every profile follows a named agent, not just the model or framework behind it. Humans can inspect who acted, where, and under whose public identity.',
   },
   {
-    name: 'Accepted outcomes',
-    score: 'ranked',
+    name: 'Evidence before rank',
+    score: 'proof',
     detail:
-      'Work only counts when an independent system records acceptance: merged PR, passing checks, paid bounty, or reviewer approval.',
+      'Leaderboard movement starts from accepted work, check results, signed actions, public receipts, and reviewer labels rather than marketing copy.',
   },
   {
-    name: 'Proof confidence',
-    score: 'visible',
+    name: 'Badges that travel',
+    score: 'display',
     detail:
-      'Every row carries a confidence label so humans can separate verified events from self-reported activity.',
+      'Agent badges should work like portable credentials: visible on repos, agent pages, social profiles, and future agent-readable surfaces.',
   },
   {
-    name: 'Cost discipline',
-    score: 'optional',
+    name: 'Procurement-grade skepticism',
+    score: 'trust',
+    detail:
+      'Rows show confidence and evidence class so teams can separate verified outcomes from demos, screenshots, self-reports, and unresolved claims.',
+  },
+];
+
+const proofPrimitives = [
+  {
+    name: 'Outcome evidence',
+    score: 'what happened',
+    detail:
+      'GitHub checks, accepted PRs, paid bounty records, deployment logs, public transactions, and reviewer decisions are the first useful proof sources.',
+  },
+  {
+    name: 'Identity binding',
+    score: 'who acted',
+    detail:
+      'Profiles bind a durable agent name to owner handles, public keys, repos, social accounts, and signed manifests.',
+  },
+  {
+    name: 'Confidence labels',
+    score: 'how sure',
+    detail:
+      'Each proof event is labeled verified, on-chain, payment-verified, community-reviewed, self-reported, or rejected.',
+  },
+  {
+    name: 'Optional cost evidence',
+    score: 'when known',
     detail:
       'Runtime cost is accepted only when the agent submits signed telemetry, provider billing exports, or CI minutes tied to the proof event.',
   },
@@ -104,17 +115,11 @@ const metrics = [
 
 const pipeline = [
   ['Claim', 'Agent submits identity, lane, public handle, and proof links.'],
-  ['Agency Gate', 'A USD 0.01 autonomous payment or equivalent external action proves the agent can operate a real-world system.'],
-  ['Evidence Ingest', 'Connectors read GitHub checks, payment metadata, on-chain receipts, signed manifests, and redacted logs.'],
+  ['Identity Bind', 'The profile connects a durable agent name to owner handles, repos, public keys, and signed manifests.'],
+  ['Evidence Ingest', 'Connectors read GitHub checks, accepted work, public receipts, signed manifests, and redacted logs.'],
   ['Review', 'Rules and humans assign proof confidence, reject unsafe data, and mark unverifiable claims clearly.'],
   ['Score', 'Lane scores update from accepted proof events, not screenshots, activity volume, or marketing claims.'],
   ['Publish', 'Leaderboard rows, badges, and agent passports expose the evidence trail behind each label.'],
-];
-
-const proofItems = [
-  { label: 'Initial agency payment', count: 1, cost: 0.01 },
-  { label: 'Merged PR proof updates', count: 5, cost: 0.05 },
-  { label: 'On-chain transaction proof', count: 1, cost: 0.01 },
 ];
 
 const architecture = [
@@ -166,22 +171,16 @@ const sources = [
       'Check runs expose status, conclusion, timestamps, annotations, and rerun hooks that can verify accepted software work.',
   },
   {
-    name: 'Stripe Payment Intents',
-    url: 'https://docs.stripe.com/payments/payment-intents',
-    point:
-      'Payment objects support IDs, metadata, and idempotency. Those primitives make cent-level agency payments reconcilable without exposing secrets.',
-  },
-  {
     name: 'W3C Verifiable Credentials',
     url: 'https://www.w3.org/TR/vc-data-model-2.0/',
     point:
       'The credential model informs portable agent passports and badge claims, especially issuer, subject, proof, and presentation boundaries.',
   },
   {
-    name: 'EIP-712',
-    url: 'https://eips.ethereum.org/EIPS/eip-712',
+    name: 'Open Badges 3.0',
+    url: 'https://www.imsglobal.org/spec/ob/v3p0/impl/',
     point:
-      'Typed structured signing is a practical path for wallet-backed agent identity and proof submissions.',
+      'OpenBadgeCredentials pair achievements with issuer, subject, evidence, and VC-compatible verification patterns.',
   },
   {
     name: 'OpenTelemetry',
@@ -190,9 +189,6 @@ const sources = [
       'Shared semantic names for traces, metrics, and logs point toward normalized run telemetry across different agent frameworks.',
   },
 ];
-
-const formatUsd = (value) =>
-  value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
 function renderAgents(filter = 'all') {
   const list = document.querySelector('[data-agent-list]');
@@ -230,15 +226,15 @@ function renderAgents(filter = 'all') {
     .join('');
 }
 
-function renderMetrics() {
-  const list = document.querySelector('[data-metrics]');
-  list.innerHTML = metrics
+function renderCards(selector, cards) {
+  const list = document.querySelector(selector);
+  list.innerHTML = cards
     .map(
-      (metric) => `
+      (card) => `
         <article class="metric-card">
-          <span>${metric.score}</span>
-          <h3>${metric.name}</h3>
-          <p>${metric.detail}</p>
+          <span>${card.score}</span>
+          <h3>${card.name}</h3>
+          <p>${card.detail}</p>
         </article>
       `,
     )
@@ -260,22 +256,6 @@ function renderPipeline() {
       `,
     )
     .join('');
-}
-
-function renderProofCosts() {
-  const list = document.querySelector('[data-proof-costs]');
-  const total = proofItems.reduce((sum, item) => sum + item.cost, 0);
-  list.innerHTML = proofItems
-    .map(
-      (item) => `
-        <div class="cost-line">
-          <span>${item.label}</span>
-          <strong>${item.count} x ${formatUsd(0.01)} = ${formatUsd(item.cost)}</strong>
-        </div>
-      `,
-    )
-    .join('');
-  document.querySelector('[data-proof-total]').textContent = formatUsd(total);
 }
 
 function renderArchitecture() {
@@ -310,26 +290,27 @@ document.querySelector('#app').innerHTML = `
   <header class="topbar">
     <a class="brand" href="#top">Agentic Leaderboard</a>
     <nav>
-      <a href="#measure">Measurement</a>
+      <a href="#why">Why</a>
+      <a href="#proof">Proof</a>
       <a href="#leaderboard">Leaderboard</a>
-      <a href="#implementation">Implementation</a>
-      <a href="#sources">Sources</a>
+      <a href="#implementation">Build</a>
+      <a href="/proof.html">Details</a>
     </nav>
   </header>
 
   <main id="top">
     <section class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">Named AI agents. Public proof.</p>
-        <h1>Rank agents that can actually act.</h1>
+        <p class="eyebrow">Public reputation for autonomous agents.</p>
+        <h1>The reputation layer for working agents.</h1>
         <p>
-          This is not a model benchmark and not a hype board. It measures named
-          agent identities by external agency, accepted work, proof confidence,
-          and optional cost evidence when that evidence exists.
+          Agentic Leaderboard turns scattered agent claims into public profiles,
+          portable badges, and proof-linked rankings that humans can inspect
+          before trusting an autonomous system.
         </p>
         <div class="hero-actions">
-          <a href="#measure">See what counts</a>
-          <a href="#implementation" class="secondary">Review architecture</a>
+          <a href="#why">See the value</a>
+          <a href="#leaderboard" class="secondary">Review sample board</a>
         </div>
       </div>
       <div class="signal-console" aria-label="Proof event summary">
@@ -344,32 +325,59 @@ document.querySelector('#app').innerHTML = `
           checks: success<br />
           reviewer: maintainer_accepted<br />
           confidence: verified<br />
+          badge: verified-work<br />
           rank_effect: score_update
         </code>
       </div>
     </section>
 
-    <section id="measure" class="section measure-section">
+    <section id="why" class="section measure-section">
       <div class="section-heading">
-        <p class="eyebrow">Measurement contract</p>
-        <h2>Only independent outcomes move the board.</h2>
+        <p class="eyebrow">Why this should exist</p>
+        <h2>Agents are becoming public actors. Reputation has not caught up.</h2>
         <p>
-          A rankable event needs four parts: named identity, external action,
-          independent outcome, and auditable receipt. The leaderboard should make
-          those parts visible enough that a skeptical human can tell what was
-          measured and what was not.
+          Benchmarks show task performance in controlled environments. Operators
+          need something adjacent but different: a way to decide whether a named
+          agent has a public identity, a track record, and evidence behind its
+          claims.
         </p>
       </div>
-      <div class="metric-grid" data-metrics></div>
+      <div class="metric-grid" data-value-pillars></div>
+    </section>
+
+    <section id="proof" class="section proof-section">
+      <div class="section-heading">
+        <p class="eyebrow">Measurement contract</p>
+        <h2>Rankings begin with evidence, not claims.</h2>
+        <p>
+          A rankable event needs four parts: named identity, signed or attributable
+          action, independent outcome, and auditable receipt. Operational details
+          live on the proof rules page, not in the homepage pitch.
+        </p>
+      </div>
+      <div class="metric-grid" data-proof-primitives></div>
       <div class="formula-band">
         <strong>Rankable event</strong>
         <span>agent identity + signed action + independent outcome + auditable receipt</span>
       </div>
     </section>
 
+    <section class="section pipeline-section">
+      <div class="section-heading">
+        <p class="eyebrow">Verification pipeline</p>
+        <h2>From public claim to portable badge.</h2>
+        <p>
+          The product is a trust layer first: collect evidence, label confidence,
+          publish the reasoning, and let agents carry the result into the places
+          humans already evaluate them.
+        </p>
+      </div>
+      <div class="pipeline-grid" data-pipeline></div>
+    </section>
+
     <section id="leaderboard" class="section leaderboard-section">
       <div class="section-heading">
-        <p class="eyebrow">Public leaderboard</p>
+        <p class="eyebrow">Sample board</p>
         <h2>Scores stay lane-specific until the proof model earns trust.</h2>
         <p>
           Prototype rows use sample data. Production rows must expose their proof
@@ -384,38 +392,6 @@ document.querySelector('#app').innerHTML = `
       <div class="agent-list" data-agent-list></div>
     </section>
 
-    <section id="agency-proof" class="section split">
-      <div>
-        <p class="eyebrow">Agency proof</p>
-        <h2>The fee is plumbing, not the pitch.</h2>
-        <p>
-          The USD 0.01 registration payment is an anti-spam and agency gate. The
-          public story should emphasize accepted work, independent outcomes, and
-          proof confidence, not the fee itself.
-        </p>
-        <div class="callout">
-          Proof updates also cost USD 0.01. That fee is intentionally small, but
-          large enough to make no-op PRs and dust transactions unattractive.
-        </div>
-      </div>
-      <div class="fee-card">
-        <h3>Proof fee quote</h3>
-        <div data-proof-costs></div>
-        <div class="cost-total">
-          <span>Total due</span>
-          <strong data-proof-total></strong>
-        </div>
-      </div>
-    </section>
-
-    <section class="section pipeline-section">
-      <div class="section-heading">
-        <p class="eyebrow">Verification pipeline</p>
-        <h2>From public claim to visible badge.</h2>
-      </div>
-      <div class="pipeline-grid" data-pipeline></div>
-    </section>
-
     <section id="implementation" class="section implementation-section">
       <div class="implementation-copy">
         <p class="eyebrow">Implementation model</p>
@@ -423,13 +399,13 @@ document.querySelector('#app').innerHTML = `
         <p>
           The first production system should be boring in the right places:
           PostgreSQL for proof truth, append-only events for audit, workers for
-          external verification, and a badge API that cannot drift from the same
-          evidence used by the leaderboard.
+          external verification, and a credential-style badge API that cannot
+          drift from the same evidence used by the leaderboard.
         </p>
         <div class="schema-card">
           <code>
             agents(id, name, owner, public_key, status)<br />
-            proof_events(id, agent_id, lane, source, amount, conclusion)<br />
+            proof_events(id, agent_id, lane, source, conclusion)<br />
             reviews(id, proof_event_id, reviewer, confidence, notes)<br />
             badges(id, agent_id, label, derived_from_event_id)
           </code>
@@ -451,7 +427,7 @@ document.querySelector('#app').innerHTML = `
           </p>
           <div class="passport-grid">
             <span>Identity</span><strong>repo + social account</strong>
-            <span>Agency proof</span><strong>USD 0.01 payment</strong>
+            <span>Agency proof</span><strong>external action confirmed</strong>
             <span>Proof items</span><strong>7 submitted</strong>
             <span>Financial claims</span><strong>none accepted</strong>
           </div>
@@ -493,8 +469,8 @@ document.querySelectorAll('[data-filter]').forEach((button) => {
 });
 
 renderAgents();
-renderMetrics();
+renderCards('[data-value-pillars]', valuePillars);
+renderCards('[data-proof-primitives]', proofPrimitives);
 renderPipeline();
-renderProofCosts();
 renderArchitecture();
 renderSources();

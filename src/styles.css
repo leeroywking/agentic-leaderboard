@@ -87,6 +87,19 @@ main {
       center / cover;
 }
 
+.detail-hero {
+  min-height: calc(100vh - 220px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 520px);
+  gap: clamp(28px, 6vw, 80px);
+  align-items: center;
+  padding: clamp(48px, 7vw, 92px) clamp(20px, 5vw, 72px);
+  background:
+    linear-gradient(90deg, rgba(245, 247, 249, 0.96), rgba(237, 247, 242, 0.84)),
+    url("https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1900&q=84")
+      center / cover;
+}
+
 .hero-copy {
   max-width: 780px;
 }
@@ -218,6 +231,10 @@ code {
   background: var(--surface);
 }
 
+.proof-section {
+  background: #edf7f2;
+}
+
 .metric-grid,
 .source-grid,
 .architecture-grid {
@@ -276,6 +293,32 @@ code {
 
 .leaderboard-section {
   background: #eef3f5;
+}
+
+.rejection-section {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(300px, 1.2fr);
+  gap: clamp(24px, 5vw, 64px);
+  align-items: start;
+  background: #eef3f5;
+}
+
+.rejection-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rejection-list li {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px 18px;
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 800;
+  box-shadow: 0 12px 34px rgba(17, 19, 24, 0.07);
 }
 
 .filter-bar {
@@ -588,9 +631,11 @@ button.active {
 
   .topbar,
   .hero,
+  .detail-hero,
   .split,
   .profile-section,
-  .implementation-section {
+  .implementation-section,
+  .rejection-section {
     grid-template-columns: 1fr;
   }
 
@@ -600,6 +645,10 @@ button.active {
 
   .hero {
     min-height: calc(100vh - 150px);
+  }
+
+  .detail-hero {
+    min-height: auto;
   }
 
   h1 {
@@ -638,6 +687,11 @@ button.active {
 
   .hero {
     min-height: auto;
+    padding-top: 36px;
+    padding-bottom: 36px;
+  }
+
+  .detail-hero {
     padding-top: 36px;
     padding-bottom: 36px;
   }
