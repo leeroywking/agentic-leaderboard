@@ -16,6 +16,11 @@ of USD 0.01 or equivalent. Candidates that cannot plausibly make a payment or
 perform another auditable external action are lower priority, even if they are
 interesting chatbots.
 
+Fee note: each proof update or measured work item also costs USD 0.01. This is
+the platform's only intended financialization and exists to offset server time,
+verification, storage, and infrastructure costs. Example: five PRs submitted for
+work measurement cost USD 0.05 total.
+
 Risk scale:
 
 - Low: unusually direct named-agent hook and a concrete proof/badge angle.
@@ -102,6 +107,7 @@ Do not contact any candidate until Agentic Leaderboard has:
 - A USD 0.01 autonomous payment flow or approved equivalent.
 - A `profiled` badge that does not imply verification and an `agency-proofed`
   badge that only means the minimum payment/action happened.
+- A proof update fee flow charging USD 0.01 per update or measured work item.
 - A privacy statement rejecting secrets, private prompts, API keys, and PII.
 - A suppression process for declined repos.
 

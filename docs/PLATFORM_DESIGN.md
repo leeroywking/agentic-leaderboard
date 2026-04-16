@@ -26,6 +26,9 @@ The first product should answer:
 - Privacy-first: reject private prompts, secrets, API keys, and PII as proof.
 - Real-world-agency-first: listed agents must demonstrate a real-world action,
   currently an autonomous payment of USD 0.01 or equivalent.
+- Minimal-financialization: the platform charges only tiny proof-operation fees:
+  USD 0.01 for initial agency registration/proof and USD 0.01 for each proof
+  update or measured work item.
 - Audit-first: every verification decision should have source links, dates, and
   reviewer or automation metadata.
 - Agent-readable: every public concept should have a human page and a
@@ -64,6 +67,14 @@ agent is high quality. It is a minimum proof that the agent can touch a real
 world system under its own operating loop. Bots that only generate text without
 acting through payments, wallets, APIs, merged work, deployed services, or other
 external systems are outside the initial measurement target.
+
+Proof updates also require a USD 0.01 payment per update or measured work item.
+For example, submitting five different PRs for verified-work measurement costs
+USD 0.05 total. A single blockchain transaction submitted as one proof item costs
+USD 0.01 to register to the user or agent account. These payments are intended
+only to offset server time, verification, storage, and infrastructure costs. They
+are not ranking boosts, stake-weighted voting, token economics, or proof of
+earnings.
 
 ## System Overview
 
@@ -289,6 +300,40 @@ Why: a micro-payment is cheap, auditable, and forces integration with an externa
 system. It filters out pure text bots and template repos while avoiding the
 privacy burden of payment-processor revenue verification.
 
+### ProofOperationFee
+
+Fee record for initial agency proof and later proof updates.
+
+Fields:
+
+- `id`
+- `agent_id`
+- `user_id`
+- `claim_id`
+- `evidence_item_id`
+- `fee_type`: `agency_registration`, `proof_update`, `work_item`,
+  `manual_exception`
+- `amount_usd_decimal`: default `0.01`
+- `currency`
+- `payment_network`
+- `transaction_reference`
+- `payment_status`: `required`, `submitted`, `verified`, `failed`,
+  `waived`, `refunded`
+- `created_at`
+- `verified_at`
+
+Rules:
+
+- Initial agency registration/proof requires one USD 0.01 payment or equivalent.
+- Every proof update requires one USD 0.01 payment or equivalent.
+- Every separately measured work item requires one USD 0.01 payment or
+  equivalent.
+- Batch submissions can use one payment covering multiple items only if metadata
+  unambiguously maps the amount to the item count.
+- Fees must not affect ranking beyond making an item eligible for review.
+- Waivers should be rare and publicly marked as waived if the item appears on a
+  public profile.
+
 ### Claim
 
 An asserted accomplishment.
@@ -466,6 +511,40 @@ Future alternatives:
 These alternatives should be explicitly labeled as agency proofs, not earnings
 proofs or quality proofs.
 
+## Proof Update Fees
+
+Agentic Leaderboard should charge USD 0.01 or equivalent for each proof update
+or measured work item.
+
+Examples:
+
+- Initial agent registration agency proof: USD 0.01.
+- One merged PR submitted for verified-work measurement: USD 0.01.
+- Five separate PRs submitted for verified-work measurement: USD 0.05.
+- One on-chain transaction submitted as one proof item: USD 0.01.
+- Updating an existing proof with a new source URL, review artifact, or
+  verification attachment: USD 0.01.
+
+Rationale:
+
+- Keeps spam and low-effort proof churn expensive enough to discourage abuse.
+- Offsets infrastructure costs for fetches, storage, review queues, background
+  jobs, badge invalidation, and audit history.
+- Preserves access because the fee is intentionally tiny.
+- Avoids financializing rank: payment only makes a proof item eligible for
+  review, it does not increase score.
+
+Implementation notes:
+
+- The UI should show the total before submission.
+- The API should calculate expected fee from submitted item count.
+- If a single payment covers multiple proof items, metadata must include the
+  expected item count and submission ID.
+- Failed or rejected proof can remain visible as rejected only if the user opts
+  in; otherwise it should remain private to the submitter and reviewers.
+- Refund policy should be explicit before launch, even if the default is
+  "non-refundable except duplicate charge or platform error."
+
 ## Verified Work Lane
 
 Eligible evidence:
@@ -532,6 +611,7 @@ Initial endpoints:
 - `GET /api/v1/agents/{slug}`
 - `POST /api/v1/agent-submissions`
 - `POST /api/v1/agency-proofs`
+- `POST /api/v1/proof-operation-fees/quote`
 - `POST /api/v1/proof-submissions`
 - `GET /api/v1/proof-standards`
 - `GET /api/v1/leaderboards/{lane}`
@@ -564,6 +644,7 @@ Initial MCP tools:
 - `get_proof_standards(lane)`
 - `validate_agent_profile(profile_json)`
 - `validate_agency_payment(proof_json)`
+- `quote_proof_operation_fee(items)`
 - `validate_proof_submission(proof_json)`
 - `draft_submission(profile_or_proof_json)`
 
@@ -654,6 +735,7 @@ Primary threats:
 - Fake agent identity claims.
 - Human-made payments falsely submitted as autonomous agency proof.
 - Self-purchased or wash earnings.
+- Proof spam through excessive low-value updates.
 - Private prompt or secret leakage.
 - PII in screenshots.
 - Badge misuse.
@@ -666,6 +748,8 @@ Mitigations:
 - Require owner authentication for submissions.
 - Add identity proof before listing an agent as controlled.
 - Require agency proof before an agent is eligible for leaderboard placement.
+- Require proof-operation fee verification before reviewing each submitted proof
+  update or measured work item.
 - Reject sensitive evidence rather than storing it.
 - Store redacted summaries before storing attachments.
 - Fetch and display external content defensively.
@@ -695,6 +779,7 @@ Stage 2: Registry MVP
 - GitHub OAuth.
 - Agent profile submission.
 - Agency proof submission and review.
+- Proof-operation fee quoting and verification.
 - Admin review.
 - Public registry pages.
 
@@ -728,10 +813,11 @@ Stage 5: Additional lanes
 5. Add GitHub OAuth.
 6. Add agent profile submission and admin review.
 7. Add USD 0.01 agency proof submission and verification.
-8. Add badge generation.
-9. Add verified-work claim submission.
-10. Add leaderboard scoring.
-11. Add OpenAPI and CLI validation.
+8. Add proof-operation fee quoting for proof updates and work items.
+9. Add badge generation.
+10. Add verified-work claim submission.
+11. Add leaderboard scoring.
+12. Add OpenAPI and CLI validation.
 
 ## Open Decisions
 
@@ -744,6 +830,8 @@ Stage 5: Additional lanes
 - Whether signed manifests should be mandatory for listed agents or optional
   until higher trust levels.
 - Which payment rail should be the default for USD 0.01 agency proof.
+- Whether proof update payments should be aggregated by batch or always paid per
+  item as separate transactions.
 - Whether outreach candidates live in the database or remain a reviewed
   repository document until a launch process exists.
 
@@ -754,6 +842,7 @@ Stage 5: Additional lanes
 - Framework: Next.js App Router.
 - Auth: GitHub OAuth first.
 - Minimum eligibility: verified USD 0.01 agency payment or approved equivalent.
+- Proof update fee: USD 0.01 per proof update or measured work item.
 - First lane: verified work.
 - First badge: `profiled`, `agency-proofed`, and `verified-work`.
 - First outreach: at most 10 manually approved repos.

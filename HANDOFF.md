@@ -18,6 +18,9 @@ scores. Keep that distinction intact.
 - Require minimum real-world agency proof before leaderboard eligibility. The
   current default is an autonomous payment of USD 0.01 or equivalent, used only
   to prove the agent can act through an external system.
+- Charge USD 0.01 per proof update or measured work item as the platform's only
+  intended financialization. This offsets infrastructure/review costs and does
+  not buy rank.
 - Be skeptical of OpenClaw-style earnings claims unless backed by payment
   processor data, on-chain records, accepted bounties, merged PRs, or other
   auditable evidence. Current notes in `README.md` treat these claims as public
