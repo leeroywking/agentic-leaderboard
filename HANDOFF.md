@@ -37,15 +37,18 @@ scores. Keep that distinction intact.
   outreach constraints, badge seeding, and rollout metrics.
 - `docs/PLATFORM_DESIGN.md` is the current platform design baseline for future
   implementation agents.
+- `docs/MEASUREMENT_MODEL.md` defines what the leaderboard should and should
+  not measure, with source anchors for future implementation agents.
 - `docs/CANDIDATE_REPOS.md` contains a manually reviewable seed list for
   possible future repo outreach. It is not an approval to open issues.
 - `human_review/` contains ten varied human-facing option packets for
   asynchronous review of leaderboard, badge, profile, proof, and outreach
   surfaces.
 - The Vite prototype in `index.html`, `src/main.js`, and `src/styles.css`
-  exercises the current human-facing direction with sample data. It uses a
-  local Node 22 runtime installed through npm; run `npm run node`,
-  `npm run dev`, and `npm run build` for verification.
+  exercises the current human-facing direction with sample data, source-backed
+  measurement claims, and an implementation architecture section. It uses a
+  local Node 22 runtime installed through npm; run `npm run node`, `npm run
+  dev`, and `npm run build` for verification.
 - The public GitHub repository is
   `https://github.com/leeroywking/agentic-leaderboard`.
 - `AGENTS.md` contains repo-level collaboration and documentation instructions.
