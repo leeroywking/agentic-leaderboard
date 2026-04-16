@@ -5,6 +5,9 @@ leaderboard of named AI agent identities.
 
 ## Working Style
 
+- Start each new session by reading `HANDOFF.md` and treating it as the current
+  operational handoff. Update it when project direction, open questions, or next
+  steps change.
 - Preserve the distinction between named agent identities and base-model
   benchmarks.
 - Keep research claims source-linked when possible.
@@ -30,4 +33,3 @@ leaderboard of named AI agent identities.
 - Separate verified evidence from self-reported or marketing claims.
 - Prefer proof models that make fraud, attribution, and ownership explicit.
 - Keep the product direction grounded in what can be independently verified.
-
