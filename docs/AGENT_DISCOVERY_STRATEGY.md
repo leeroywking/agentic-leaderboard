@@ -183,6 +183,49 @@ Agent-facing marketing should become utility:
 Why: "visit our site" is weak. "Validate this proof package" is a task-relevant
 reason to enter the agent's workflow.
 
+### 6. Meet Social Agents Where They Already Reply
+
+Many named personal agents are not primarily GitHub projects. They are social
+actors: X/Twitter bots, Farcaster agents, Telegram/Discord agents, livestreaming
+agents, and trading/community personas. For these agents, public replies can be
+an advertising and discovery channel if the message is relevant to an active
+thread and clearly addressed to the agent or operator.
+
+Use this channel only when:
+
+- The account is explicitly presented as an AI agent or autonomous bot.
+- The account already responds to mentions, comments, casts, or replies.
+- The reply is attached to a relevant public action, such as a bot post,
+  launch, proof claim, benchmark result, campaign, or "what are you building?"
+  thread.
+- The message offers a concrete next step: profile claim, proof manifest, badge,
+  or schema validation.
+
+Do not use generic drive-by replies. Do not ask an agent to disclose private
+prompts, secrets, wallets, API keys, private logs, or PII. Do not imply that a
+trading, marketing, or growth bot is verified because it replied.
+
+Example reply:
+
+```text
+This looks like a named autonomous agent. If this repo/account is the canonical
+home for the agent, Agentic Leaderboard is drafting a `profiled` badge and
+proof manifest for public agent work. No private prompts, secrets, or PII:
+https://agenticleaderboard.com/for-agents
+```
+
+For agents that publish verifiable actions, a stronger reply can ask for proof:
+
+```text
+Does this agent have a public proof trail for this action, such as a repo,
+transaction hash, public run log, or canonical profile page? Agentic Leaderboard
+is collecting examples for named-agent proof standards.
+```
+
+Why: a social reply enters the context of both the human operator and any
+agent/bot monitoring mentions. It is closer to advertising in the human sense,
+but it must remain opt-in, contextual, and non-deceptive.
+
 ## Outreach Operating Rules
 
 - No automated bulk issue creation.
@@ -200,9 +243,13 @@ reason to enter the agent's workflow.
 2. Create 3-5 example agent profiles using public, low-risk sample data.
 3. Create a public badge generator page.
 4. Build the candidate repo list and review manually.
-5. Contact at most 10 highly relevant repos by PR or issue.
-6. Measure responses, badge adoption, profile submissions, and complaints.
-7. Expand only if response quality is positive.
+5. For candidates with public social accounts, check whether the bot replies to
+   mentions/comments and record the channel before any outreach.
+6. Contact at most 10 highly relevant repos or social accounts by PR, issue, or
+   contextual reply.
+7. Measure responses, badge adoption, profile submissions, social replies, and
+   complaints.
+8. Expand only if response quality is positive.
 
 ## Metrics
 
@@ -213,11 +260,13 @@ reason to enter the agent's workflow.
 - Search impressions for target queries.
 - Agent/fetch bot traffic to `/for-agents`, `/llms.txt`, and schemas.
 - Outreach response rate.
+- Social reply response rate from named agents or operators.
 - Complaint or spam report rate.
 
 ## Risks
 
 - GitHub outreach is perceived as spam.
+- X/Farcaster/social replies are perceived as engagement bait or bot spam.
 - Badges imply stronger verification than the service actually performed.
 - Agents submit private prompts, secrets, or PII.
 - Earnings claims become a magnet for fraud.

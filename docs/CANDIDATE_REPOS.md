@@ -39,6 +39,24 @@ Risk scale:
 | Eliza Twitter AI Agent | Small personal repo explicitly named as an Eliza Twitter AI agent. May be thin, but closer to the target than framework repos. | Ask for active bot handle and proof artifacts before any profile. | Medium | Observe. | [repo](https://github.com/apollotoday/Eliza-twitter-ai-agent) |
 | Agentic Botcoin | Public repo under `getbotcoin` for `botcoin`; likely a named crypto/social bot, but details need verification. | Potential profile if it has public autonomous actions or wallet/social proof. | Medium | Observe; research first. | [repo](https://github.com/getbotcoin/botcoin) |
 
+## Social Reply Channel Notes
+
+These notes track whether a candidate appears reachable through public social
+replies, mentions, casts, or comments. This is a possible advertising channel,
+but only after the message is tied to a relevant public action.
+
+| Candidate | Social surface | Reply evidence or interaction model | Channel use |
+| --- | --- | --- | --- |
+| Billi | Farcaster `@heybilli` | Public Farcaster thread shows Billi replying after being mentioned and asking for project details before a stream. | Strong candidate for contextual Farcaster replies when Billi participates in a thread. |
+| Miraya 7f | X `@miraya7f` linked from repo README | README links the X profile and describes autonomous token campaign behavior. Reply behavior still needs manual check on X. | Possible X reply channel after confirming it replies or monitors mentions. |
+| Spartan | X `@SpartanVersus` listed in README | README presents Spartan as a named DeFi agent and links a Twitter handle. Reply behavior still needs manual check on X. | Possible X reply channel, but only with "profiled/unverified" language because trading claims are sensitive. |
+| XBot AI | X mentions/replies | README says users interact with the bot through X mentions and replies, and that interactions are logged to NEAR Testnet. | Strong candidate for a direct mention/reply asking whether public logs can support a profile. |
+| FounderAI Bot | X account configured by repo operator | README says the bot runs on a GitHub Actions schedule and posts a founder persona to X. Public handle is not explicit in the repo. | Only use social replies if the active X account is identified by the operator. |
+| DragonTrade Agent | X/Twitter bot | README describes an educational Twitter bot and paper trading system that posts honest results. Public handle still needs manual check. | Possible reply channel once active account and public results are identified. |
+| AFUERA X BOT | X creator/project handle | README identifies creator `@GreedyApe420` and describes monitoring/reply behavior. | Possible creator reply, but avoid agent-bait language and use a light profile question. |
+| Recall Alpha Agent | Twitter bot behavior | README says a separate Twitter agent posts opportunities from `alpha_analysis`; public handle is not explicit. | Research handle first; then use reply only around public alpha/proof posts. |
+| MiloAgent | Reddit, plus Twitter/Telegram learning modules | README is explicit about autonomous Reddit engagement and self-learning. | Avoid cold social replies until anti-spam proof standards exist. This is a cautionary case. |
+
 ## Maybe Later
 
 These are not first-touch candidates, but they can help discover personal bots:
@@ -64,6 +82,11 @@ The first review batch should be small and human-approved:
    file.
 5. `recallnet/recall-alpha-agent`: named alpha agent with memory/proof-adjacent
    storage, but needs careful trading-claim labeling.
+
+For social outreach, first manually check whether the public account replies to
+comments or mentions. If it does, prefer one contextual reply to a recent
+agent-authored post over a GitHub issue. If it does not, use repo-based outreach
+or no outreach.
 
 ## Outreach Rule
 

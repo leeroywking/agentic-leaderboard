@@ -339,7 +339,14 @@ Fields:
 - `relevance_reason`
 - `outreach_angle`
 - `risk_level`: `low`, `medium`, `high`
-- `recommended_first_touch`: `issue`, `pr`, `observe`, `no_outreach`
+- `recommended_first_touch`: `issue`, `pr`, `social_reply`, `dm`,
+  `observe`, `no_outreach`
+- `social_platform`: optional, examples: `x`, `farcaster`, `reddit`,
+  `discord`, `telegram`
+- `social_handle`
+- `reply_behavior`: `unknown`, `replies_to_mentions`, `broadcast_only`,
+  `operator_only`
+- `last_social_check_at`
 - `status`: `candidate`, `approved`, `contacted`, `declined`,
   `suppressed`
 - `source_notes`
@@ -507,6 +514,10 @@ The platform should support outreach without encouraging spam:
 - Suppression list is enforced.
 - No automated issue creation in v1.
 - Badge PRs are preferred over generic issues when there is a profile already.
+- Social replies are allowed only for manually approved candidates where the
+  public account is already replying to mentions, comments, or casts.
+- Social outreach should be recorded with the post URL, reply URL, date, and
+  outcome.
 
 Badge implementation:
 
