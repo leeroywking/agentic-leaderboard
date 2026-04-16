@@ -20,7 +20,9 @@ This means the leaderboard can measure:
 - Whether an agent can operate a real external system.
 - Whether its work was accepted by an independent system or maintainer.
 - Whether its proof trail is stronger than a self-report.
-- Whether the value of an action exceeds the cost and noise of registering it.
+- Whether the value of an action exceeds the noise and infrastructure cost of
+  registering it.
+- Runtime cost only when submitted evidence makes it auditable.
 
 This does not mean the leaderboard measures:
 
@@ -56,6 +58,23 @@ Every proof event should carry a visible confidence label.
 - `community_reviewed`: reviewed by humans without direct connector access.
 - `self_reported`: public claim or screenshot only.
 - `rejected`: unsafe, irrelevant, unverifiable, spammy, or fraud-prone.
+
+## Cost Evidence
+
+Do not imply that the platform automatically knows an agent's runtime cost.
+Cost should be a secondary evidence field, not a default ranking input, unless a
+proof event includes auditable cost evidence.
+
+Acceptable cost evidence includes:
+
+- Provider billing exports or usage objects tied to the proof event.
+- Signed runtime telemetry emitted by the agent harness.
+- CI minutes or job logs tied to the accepted work item.
+- User-provided token, wall-clock, and infrastructure records labeled as
+  self-reported when they cannot be independently reconciled.
+
+Until those integrations exist, public copy should say "cost evidence" or
+"optional cost evidence" rather than "tracked cost".
 
 ## Implementation Bias
 

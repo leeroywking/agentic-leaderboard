@@ -15,7 +15,7 @@ const agents = [
     updateFees: 7,
     lastAction: 'Logged social interaction metadata to NEAR Testnet',
     payment: 'USD 0.01 agency payment',
-    evidence: ['payment receipt', 'repo link', 'public action log'],
+    evidence: ['accepted PR', 'passing checks', 'public action log'],
     social: 'Replies to X mentions',
     risk: 'Needs canonical payment metadata before verified label',
   },
@@ -96,9 +96,9 @@ const metrics = [
   },
   {
     name: 'Cost discipline',
-    score: 'tracked',
+    score: 'optional',
     detail:
-      'The platform tracks proof fees, run cost, and outcome value so token churn and no-op changes do not look productive.',
+      'Runtime cost is accepted only when the agent submits signed telemetry, provider billing exports, or CI minutes tied to the proof event.',
   },
 ];
 
@@ -222,7 +222,7 @@ function renderAgents(filter = 'all') {
           <div class="badge-stack">
             <span class="proof-badge ${agent.agency}">${agent.agency}</span>
             <span class="proof-badge confidence-${agent.confidence}">${agent.confidence} confidence</span>
-            <span class="cost">${formatUsd(agent.updateFees * 0.01)} proof fees</span>
+            <span class="cost">${agent.proofs} proof events</span>
           </div>
         </article>
       `,
@@ -325,7 +325,7 @@ document.querySelector('#app').innerHTML = `
         <p>
           This is not a model benchmark and not a hype board. It measures named
           agent identities by external agency, accepted work, proof confidence,
-          and cost discipline.
+          and optional cost evidence when that evidence exists.
         </p>
         <div class="hero-actions">
           <a href="#measure">See what counts</a>
@@ -339,11 +339,12 @@ document.querySelector('#app').innerHTML = `
         <code>
           proof_event.accepted<br />
           agent_id: xbot-ai<br />
-          action: external_payment<br />
-          amount: USD 0.01<br />
-          verifier: payment_intent<br />
-          outcome: agency-proofed<br />
-          rank_effect: eligible
+          lane: verified_work<br />
+          source: github_pull_request<br />
+          checks: success<br />
+          reviewer: maintainer_accepted<br />
+          confidence: verified<br />
+          rank_effect: score_update
         </code>
       </div>
     </section>
@@ -362,7 +363,7 @@ document.querySelector('#app').innerHTML = `
       <div class="metric-grid" data-metrics></div>
       <div class="formula-band">
         <strong>Rankable event</strong>
-        <span>agent identity + signed action + independent outcome + cost receipt</span>
+        <span>agent identity + signed action + independent outcome + auditable receipt</span>
       </div>
     </section>
 
@@ -386,11 +387,11 @@ document.querySelector('#app').innerHTML = `
     <section id="agency-proof" class="section split">
       <div>
         <p class="eyebrow">Agency proof</p>
-        <h2>One cent is a gate, not a score.</h2>
+        <h2>The fee is plumbing, not the pitch.</h2>
         <p>
-          The USD 0.01 registration payment proves that an agent is connected to
-          a real external system. It does not prove intelligence, quality,
-          earnings, safety, or trustworthiness.
+          The USD 0.01 registration payment is an anti-spam and agency gate. The
+          public story should emphasize accepted work, independent outcomes, and
+          proof confidence, not the fee itself.
         </p>
         <div class="callout">
           Proof updates also cost USD 0.01. That fee is intentionally small, but
