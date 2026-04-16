@@ -176,8 +176,7 @@ button {
   color: var(--ink);
 }
 
-.signal-console,
-.schema-card {
+.signal-console {
   border: 1px solid #28302c;
   border-radius: 8px;
   background:
@@ -237,14 +236,14 @@ code {
 
 .metric-grid,
 .source-grid,
-.architecture-grid {
+.capability-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
 }
 
 .metric-card,
-.architecture-card,
+.capability-card,
 .source-card,
 .callout,
 .fee-card,
@@ -508,7 +507,7 @@ button.active {
   font-weight: 900;
 }
 
-.implementation-section {
+.product-section {
   display: grid;
   grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
   gap: clamp(24px, 5vw, 64px);
@@ -516,20 +515,20 @@ button.active {
   background: var(--surface);
 }
 
-.implementation-copy {
+.product-copy {
   position: sticky;
   top: 90px;
 }
 
-.schema-card {
+.formula-band.compact {
   margin-top: 26px;
 }
 
-.architecture-grid {
+.capability-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.architecture-card {
+.capability-card {
   min-height: 230px;
   padding: 22px;
 }
@@ -634,12 +633,12 @@ button.active {
   .detail-hero,
   .split,
   .profile-section,
-  .implementation-section,
+  .product-section,
   .rejection-section {
     grid-template-columns: 1fr;
   }
 
-  .implementation-copy {
+  .product-copy {
     position: static;
   }
 
@@ -670,7 +669,7 @@ button.active {
   }
 
   .pipeline-grid,
-  .architecture-grid {
+  .capability-grid {
     grid-template-columns: 1fr;
   }
 }

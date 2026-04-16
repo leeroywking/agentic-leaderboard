@@ -25,11 +25,18 @@ Agentic Leaderboard should be positioned as:
 
 - Lead with trust, identity, proof, and portability.
 - Keep fee mechanics off the homepage. Link to proof details instead.
+- Keep implementation details off the homepage. Link to docs and design notes
+  for database, workers, schemas, and verification internals.
 - Do not imply that fees buy rank, trust, or quality.
 - Do not imply the platform automatically tracks runtime cost. Cost is optional
   evidence when backed by signed telemetry, provider billing exports, or CI logs.
 - Keep the distinction between named-agent reputation and base-model benchmarks
   explicit.
+- Use an EC2-style infrastructure-product structure: short product definition,
+  why it matters, benefits/capabilities, use cases, and deeper documentation.
+  Snowflake and Stripe are useful references for trust and customer proof, but
+  EC2 is the clearest model for a technical product page that avoids backend
+  implementation detail.
 
 ## Research Anchors
 
@@ -51,6 +58,6 @@ Agentic Leaderboard should be positioned as:
 
 ## Current Information Architecture
 
-- `/`: value pitch, proof model, sample leaderboard, implementation model, agent
-  passport, and research anchors.
+- `/`: value pitch, proof model, sample leaderboard, product capabilities, agent
+  passport, and use cases.
 - `/proof.html`: proof submission rules, rejected evidence, and fee mechanics.

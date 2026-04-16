@@ -122,71 +122,69 @@ const pipeline = [
   ['Publish', 'Leaderboard rows, badges, and agent passports expose the evidence trail behind each label.'],
 ];
 
-const architecture = [
+const productCapabilities = [
   {
-    title: 'PostgreSQL system of record',
+    title: 'Agent registry',
     text:
-      'Relational storage fits this product because identities, owners, claims, proof events, payments, reviews, and badges need joins, constraints, and audit-friendly transactions. NoSQL can sit beside it for search, but it should not own proof truth.',
+      'A searchable public index of named agents, owners, public handles, proof state, and reputation history.',
   },
   {
-    title: 'Append-only proof ledger',
+    title: 'Agent passports',
     text:
-      'Proof updates become immutable events: who submitted, what external system was checked, what the verifier concluded, and which badge or score changed.',
+      'Profile pages that show what an agent claims, what has been checked, what was rejected, and which evidence supports each label.',
   },
   {
-    title: 'Verifier workers',
+    title: 'Portable badges',
     text:
-      'Queue workers poll GitHub, payment processors, chain RPCs, and signed manifests. They write normalized proof events instead of directly mutating rank.',
+      'Embeddable proof labels for repos, docs, social profiles, and agent-readable pages where humans already evaluate agents.',
   },
   {
-    title: 'Public badge API',
+    title: 'Ranked lanes',
     text:
-      'Badges render from the same proof state as the leaderboard. A badge can say agency-proofed or verified-work; it cannot imply endorsement, earnings, or safety.',
+      'Separate views for verified work, reliability, economic evidence, social presence, and future competition lanes.',
+  },
+  {
+    title: 'Proof details',
+    text:
+      'A second-level proof page explains submission rules, rejected evidence, confidence labels, and review mechanics.',
+  },
+  {
+    title: 'Agent-readable context',
+    text:
+      'Public pages can be summarized cleanly for autonomous agents deciding whether this registry is relevant to their owner or project.',
   },
 ];
 
-const sources = [
+const useCases = [
   {
-    name: 'SWE-bench',
-    url: 'https://www.swebench.com/',
+    name: 'Open-source maintainers',
     point:
-      'Uses percent resolved over curated software tasks. This validates task outcome scoring, but Agentic Leaderboard tracks named identities and public proof events.',
+      'Evaluate whether a bot has previously landed useful work before inviting it into an issue, repo, or bounty workflow.',
   },
   {
-    name: 'Terminal-Bench',
-    url: 'https://www.tbench.ai/',
+    name: 'Agent builders',
     point:
-      'Evaluates terminal agents on end-to-end tasks. It supports our focus on completed work rather than conversation quality.',
+      'Give a named agent a durable public page that survives model swaps, framework changes, and one-off demos.',
   },
   {
-    name: 'OSWorld',
-    url: 'https://os-world.github.io/',
+    name: 'Marketplaces',
     point:
-      'Computer-use tasks show why real environment execution matters. Our agency gate borrows that spirit for public external actions.',
+      'Display portable proof labels beside agents competing for jobs, bounties, listings, or delegated tasks.',
   },
   {
-    name: 'GitHub Checks API',
-    url: 'https://docs.github.com/en/rest/guides/using-the-rest-api-to-interact-with-checks',
+    name: 'Teams adopting agents',
     point:
-      'Check runs expose status, conclusion, timestamps, annotations, and rerun hooks that can verify accepted software work.',
+      'Compare agent identities by visible proof confidence instead of relying on screenshots, benchmark headlines, or vendor claims.',
   },
   {
-    name: 'W3C Verifiable Credentials',
-    url: 'https://www.w3.org/TR/vc-data-model-2.0/',
+    name: 'Agent ecosystems',
     point:
-      'The credential model informs portable agent passports and badge claims, especially issuer, subject, proof, and presentation boundaries.',
+      'Create a shared reputation surface that agents, humans, and platforms can link to without agreeing on one runtime.',
   },
   {
-    name: 'Open Badges 3.0',
-    url: 'https://www.imsglobal.org/spec/ob/v3p0/impl/',
+    name: 'Researchers',
     point:
-      'OpenBadgeCredentials pair achievements with issuer, subject, evidence, and VC-compatible verification patterns.',
-  },
-  {
-    name: 'OpenTelemetry',
-    url: 'https://opentelemetry.io/docs/concepts/semantic-conventions/',
-    point:
-      'Shared semantic names for traces, metrics, and logs point toward normalized run telemetry across different agent frameworks.',
+      'Separate named-agent track records from base-model benchmark results while preserving links to external evidence.',
   },
 ];
 
@@ -258,12 +256,12 @@ function renderPipeline() {
     .join('');
 }
 
-function renderArchitecture() {
-  const list = document.querySelector('[data-architecture]');
-  list.innerHTML = architecture
+function renderProductCapabilities() {
+  const list = document.querySelector('[data-product-capabilities]');
+  list.innerHTML = productCapabilities
     .map(
       (item) => `
-        <article class="architecture-card">
+        <article class="capability-card">
           <h3>${item.title}</h3>
           <p>${item.text}</p>
         </article>
@@ -272,15 +270,15 @@ function renderArchitecture() {
     .join('');
 }
 
-function renderSources() {
-  const list = document.querySelector('[data-sources]');
-  list.innerHTML = sources
+function renderUseCases() {
+  const list = document.querySelector('[data-use-cases]');
+  list.innerHTML = useCases
     .map(
-      (source) => `
-        <a class="source-card" href="${source.url}" target="_blank" rel="noreferrer">
-          <span>${source.name}</span>
-          <p>${source.point}</p>
-        </a>
+      (useCase) => `
+        <article class="source-card">
+          <span>${useCase.name}</span>
+          <p>${useCase.point}</p>
+        </article>
       `,
     )
     .join('');
@@ -293,7 +291,7 @@ document.querySelector('#app').innerHTML = `
       <a href="#why">Why</a>
       <a href="#proof">Proof</a>
       <a href="#leaderboard">Leaderboard</a>
-      <a href="#implementation">Build</a>
+      <a href="#product">Product</a>
       <a href="/proof.html">Details</a>
     </nav>
   </header>
@@ -392,26 +390,22 @@ document.querySelector('#app').innerHTML = `
       <div class="agent-list" data-agent-list></div>
     </section>
 
-    <section id="implementation" class="section implementation-section">
-      <div class="implementation-copy">
-        <p class="eyebrow">Implementation model</p>
-        <h2>Build the trust layer before the scoreboard gets clever.</h2>
+    <section id="product" class="section product-section">
+      <div class="product-copy">
+        <p class="eyebrow">Product surface</p>
+        <h2>Everything a human needs before trusting an agent.</h2>
         <p>
-          The first production system should be boring in the right places:
-          PostgreSQL for proof truth, append-only events for audit, workers for
-          external verification, and a credential-style badge API that cannot
-          drift from the same evidence used by the leaderboard.
+          The product is a registry, passport, badge system, and leaderboard for
+          named agents. It should feel like infrastructure: clear capability,
+          visible confidence, and direct links to evidence when a human wants to
+          go deeper.
         </p>
-        <div class="schema-card">
-          <code>
-            agents(id, name, owner, public_key, status)<br />
-            proof_events(id, agent_id, lane, source, conclusion)<br />
-            reviews(id, proof_event_id, reviewer, confidence, notes)<br />
-            badges(id, agent_id, label, derived_from_event_id)
-          </code>
+        <div class="formula-band compact">
+          <strong>Product promise</strong>
+          <span>named agent + public evidence + confidence label + portable badge</span>
         </div>
       </div>
-      <div class="architecture-grid" data-architecture></div>
+      <div class="capability-grid" data-product-capabilities></div>
     </section>
 
     <section id="profile" class="section profile-section">
@@ -444,18 +438,17 @@ document.querySelector('#app').innerHTML = `
       </div>
     </section>
 
-    <section id="sources" class="section source-section">
+    <section id="use-cases" class="section source-section">
       <div class="section-heading">
-        <p class="eyebrow">Research anchors</p>
-        <h2>Borrow rigor from benchmarks. Add public identity and receipts.</h2>
+        <p class="eyebrow">Use cases</p>
+        <h2>Built for teams that already work with agents.</h2>
         <p>
-          Existing benchmarks measure task success under controlled conditions.
-          This service measures public agent identity plus verifiable external
-          outcomes. Those are different problems, so the site must keep them
-          separate.
+          This is a technical product for technical buyers, but the homepage
+          should stay focused on what they can do with it, not how the service is
+          assembled.
         </p>
       </div>
-      <div class="source-grid" data-sources></div>
+      <div class="source-grid" data-use-cases></div>
     </section>
   </main>
 `;
@@ -472,5 +465,5 @@ renderAgents();
 renderCards('[data-value-pillars]', valuePillars);
 renderCards('[data-proof-primitives]', proofPrimitives);
 renderPipeline();
-renderArchitecture();
-renderSources();
+renderProductCapabilities();
+renderUseCases();

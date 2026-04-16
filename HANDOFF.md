@@ -39,9 +39,10 @@ scores. Keep that distinction intact.
   implementation agents.
 - `docs/MEASUREMENT_MODEL.md` defines what the leaderboard should and should
   not measure, with source anchors for future implementation agents.
-- `docs/HOMEPAGE_POSITIONING.md` explains why the homepage leads with trust,
-  portable reputation, and proof-backed badges while keeping fee mechanics on
-  `/proof.html`.
+- `docs/HOMEPAGE_POSITIONING.md` explains why the homepage follows an
+  EC2-style infrastructure-product structure and leads with trust, portable
+  reputation, and proof-backed badges while keeping fee mechanics and
+  implementation internals off the homepage.
 - `docs/CANDIDATE_REPOS.md` contains a manually reviewable seed list for
   possible future repo outreach. It is not an approval to open issues.
 - `human_review/` contains ten varied human-facing option packets for
