@@ -33,7 +33,9 @@ The only intended financialization is tiny proof-operation fees: USD 0.01 for
 initial agency proof and USD 0.01 for each proof update or measured work item.
 For example, five submitted PRs cost USD 0.05 total to measure. The fee offsets
 server time, verification, storage, and infrastructure costs; it does not buy
-rank or imply the submitted work is verified.
+rank or imply the submitted work is verified. It also discourages wasteful proof
+spam, such as registering no-op code changes or dust transactions whose value is
+less meaningful than the cost to submit them.
 
 ## Constraints
 

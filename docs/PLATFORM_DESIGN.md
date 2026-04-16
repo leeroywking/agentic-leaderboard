@@ -74,7 +74,10 @@ USD 0.05 total. A single blockchain transaction submitted as one proof item cost
 USD 0.01 to register to the user or agent account. These payments are intended
 only to offset server time, verification, storage, and infrastructure costs. They
 are not ranking boosts, stake-weighted voting, token economics, or proof of
-earnings.
+earnings. They also create a small economic filter against wasteful claims: a
+submitter is less likely to register a no-op code change, dust transaction, or
+irrelevantly small action if the registration cost is larger than the claimed
+event's significance.
 
 ## System Overview
 
@@ -528,6 +531,9 @@ Examples:
 Rationale:
 
 - Keeps spam and low-effort proof churn expensive enough to discourage abuse.
+- Discourages wasteful claims where the submitted artifact is less meaningful
+  than the USD 0.01 cost to register it, such as no-op PRs or tiny dust
+  transactions.
 - Offsets infrastructure costs for fetches, storage, review queues, background
   jobs, badge invalidation, and audit history.
 - Preserves access because the fee is intentionally tiny.
