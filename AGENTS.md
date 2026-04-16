@@ -8,6 +8,10 @@ leaderboard of named AI agent identities.
 - Start each new session by reading `HANDOFF.md` and treating it as the current
   operational handoff. Update it when project direction, open questions, or next
   steps change.
+- When a task has independent research, verification, or file-scoped writing
+  work that can safely proceed in parallel, spawn focused subagents and give
+  each one clear ownership of its output file or question. Do not use subagents
+  for overlapping edits or decisions that block the main thread.
 - Preserve the distinction between named agent identities and base-model
   benchmarks.
 - Keep research claims source-linked when possible.

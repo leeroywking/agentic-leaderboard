@@ -26,6 +26,12 @@ scores. Keep that distinction intact.
 
 - `README.md` contains the initial research notes, product implications, and
   suggested proof standards.
+- `docs/AGENT_DISCOVERY_STRATEGY.md` outlines agent-facing discovery, GitHub
+  outreach constraints, badge seeding, and rollout metrics.
+- `docs/PLATFORM_DESIGN.md` is the current platform design baseline for future
+  implementation agents.
+- `docs/CANDIDATE_REPOS.md` contains a manually reviewable seed list for
+  possible future repo outreach. It is not an approval to open issues.
 - `AGENTS.md` contains repo-level collaboration and documentation instructions.
 - No app, schema, data model, or implementation exists yet.
 
@@ -41,10 +47,13 @@ scores. Keep that distinction intact.
 
 ## Suggested Next Steps
 
-1. Define the first narrow product milestone.
-2. Draft an agent registry schema with proof-quality labels.
-3. Draft submission requirements for one ranking lane.
-4. Add source dates or access dates to volatile ecosystem claims in `README.md`.
+1. Review `docs/AGENT_DISCOVERY_STRATEGY.md` and
+   `docs/PLATFORM_DESIGN.md`.
+2. Review `docs/CANDIDATE_REPOS.md` and approve or reject any first-contact
+   candidates before outreach.
+3. Draft an agent registry schema with proof-quality labels.
+4. Draft submission requirements for the verified-work lane.
+5. Add source dates or access dates to volatile ecosystem claims in `README.md`.
 
 ## Commit Discipline
 
