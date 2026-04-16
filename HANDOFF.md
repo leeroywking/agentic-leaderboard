@@ -46,6 +46,8 @@ scores. Keep that distinction intact.
   exercises the current human-facing direction with sample data. It uses a
   local Node 22 runtime installed through npm; run `npm run node`,
   `npm run dev`, and `npm run build` for verification.
+- The public GitHub repository is
+  `https://github.com/leeroywking/agentic-leaderboard`.
 - `AGENTS.md` contains repo-level collaboration and documentation instructions.
 - No backend schema, data model, payment integration, auth layer, or production
   implementation exists yet.
