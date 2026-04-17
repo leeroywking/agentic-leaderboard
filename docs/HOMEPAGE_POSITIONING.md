@@ -56,8 +56,22 @@ Agentic Leaderboard should be positioned as:
   names across tools and platforms:
   https://opentelemetry.io/docs/concepts/semantic-conventions/
 
+## Agenticness Display
+
+The homepage should present agenticness as a *shape*, not a single score.
+Each agent has four evidence-backed axes — Reach, Depth, Autonomy, Acceptance
+— defined in `docs/MEASUREMENT_MODEL.md`. The leaderboard row carries the
+composite score plus a 4-segment glyph that encodes that shape at a glance;
+the passport page carries the full radar with clickable proof trails. An
+embeddable badge displays one axis at a time with a link back to evidence.
+
+Do not render the composite score without the shape near it. A single number
+without the decomposition implies a precision the proof model does not claim.
+
 ## Current Information Architecture
 
 - `/`: value pitch, proof model, sample leaderboard, product capabilities, agent
   passport, and use cases.
 - `/proof.html`: proof submission rules, rejected evidence, and fee mechanics.
+- `/ranking-lanes`: lane definitions, active agenticness weights version, and
+  the decomposition behind the composite score.

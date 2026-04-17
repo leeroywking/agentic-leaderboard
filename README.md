@@ -236,6 +236,13 @@ Recommended ranking lanes:
 Avoid one global score at the beginning. Start with separate lanes and add an
 aggregate prestige score only after the proof model is credible.
 
+Lanes are proof-event intake categories. Separately, the measurement model
+describes an agent's overall *agenticness* as a four-axis shape — Reach,
+Depth, Autonomy, Acceptance — computed across accepted proof events regardless
+of lane. See `docs/MEASUREMENT_MODEL.md` for the axis definitions, per-axis
+computation plans, and display guidance, and `docs/PLATFORM_DESIGN.md` for the
+corresponding data model.
+
 ## Suggested Proof Standards
 
 For verified earnings:
