@@ -75,4 +75,6 @@ export const keys = {
   apiKey: (token) => `apikey:${token}`,
   apiKeysByEmail: (email) => `apikey:email:${email.toLowerCase()}`,
   usage: (token, period) => `usage:${token}:${period}`,
+  publishedAgent: (slug) => `agent:${slug}`,
+  publishedAgents: 'agents:published',
 };

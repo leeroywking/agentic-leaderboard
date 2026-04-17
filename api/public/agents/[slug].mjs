@@ -1,33 +1,37 @@
+// Public, unauthenticated passport lookup.
+//
+// This is distinct from /api/v1/agents/[slug], which is the programmatic
+// API used by paying relying parties and requires an API key. The public
+// endpoint supports the human-facing /agent.html passport page for agents
+// that were admitted after the static prototype was built — we don't want
+// those passport pages to require an API key just to render.
+//
+// Rate limiting here is per-IP (soft), not per-key. Relying parties that
+// want reliable, SLA-backed lookups should use the /api/v1 path.
+
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { pathToFileURL } from 'node:url';
 import { methodGuard, ok, bad } from '../../_lib/http.mjs';
-import { authenticateApiKey } from '../../_lib/auth.mjs';
 import { store, keys } from '../../_lib/store.mjs';
 
 const currentFile = fileURLToPath(import.meta.url);
 const rootDir = resolve(dirname(currentFile), '..', '..', '..');
 
 let agentsCache = null;
-
-async function loadAgents() {
+async function loadStatic() {
   if (agentsCache) return agentsCache;
-  const mod = await import(
-    pathToFileURL(resolve(rootDir, 'src/shared/agents.js')).href
-  );
-  const scoring = await import(
-    pathToFileURL(resolve(rootDir, 'src/shared/scoring.js')).href
-  );
+  const mod = await import(pathToFileURL(resolve(rootDir, 'src/shared/agents.js')).href);
+  const scoring = await import(pathToFileURL(resolve(rootDir, 'src/shared/scoring.js')).href);
   const map = new Map();
   for (const agent of mod.agents) {
-    const composite = scoring.computeComposite(agent.axes);
-    map.set(agent.slug, { agent, composite });
+    map.set(agent.slug, { agent, composite: scoring.computeComposite(agent.axes) });
   }
   agentsCache = { map, version: scoring.weightsVersion };
   return agentsCache;
 }
 
-function serializeAgent(agent, composite, version) {
+function serializePublic(agent, composite, version) {
   return {
     slug: agent.slug,
     name: agent.name,
@@ -38,10 +42,7 @@ function serializeAgent(agent, composite, version) {
     certification: agent.certification,
     first_seen: agent.firstSeen,
     identity_bindings: agent.identityBindings,
-    composite: {
-      score: composite,
-      weights_version: version,
-    },
+    composite: { score: composite, weights_version: version },
     axes: {
       reach: {
         value: agent.axes.reach.v,
@@ -66,55 +67,30 @@ function serializeAgent(agent, composite, version) {
         self_rate: agent.axes.acceptance.selfRate,
       },
     },
-    links: {
-      passport: `https://agenticleaderboard.org/agent-${agent.slug}.html`,
-      badges: {
-        composite: `https://agenticleaderboard.org/badge/composite/${agent.slug}.svg`,
-        agency: `https://agenticleaderboard.org/badge/agency/${agent.slug}.svg`,
-        acceptance: `https://agenticleaderboard.org/badge/acceptance/${agent.slug}.svg`,
-      },
-    },
+    passport_url: `https://agenticleaderboard.org/agent.html?slug=${agent.slug}`,
   };
 }
 
 export default async function handler(req, res) {
   if (!methodGuard(req, res, ['GET'])) return;
 
-  const auth = await authenticateApiKey(req);
-  if (!auth.ok) {
-    return bad(res, auth.status, auth.error, auth);
-  }
-
   const url = new URL(req.url, 'http://x');
   const slugParam = req.query?.slug || url.pathname.split('/').pop().replace(/\.json$/, '');
   const slug = String(slugParam || '').toLowerCase();
+  if (!slug) return bad(res, 400, 'missing_slug');
 
-  const { map, version } = await loadAgents();
+  const { map, version } = await loadStatic();
   let record = map.get(slug);
-
-  // Fall back to the published-agents store for agents admitted via the
-  // admin review flow after the static dataset was built.
   if (!record) {
     const published = await store.get(keys.publishedAgent(slug));
     if (published) {
       const agent = typeof published === 'string' ? JSON.parse(published) : published;
-      const { computeComposite } = await import(
-        pathToFileURL(resolve(rootDir, 'src/shared/scoring.js')).href
-      );
+      const { computeComposite } = await import(pathToFileURL(resolve(rootDir, 'src/shared/scoring.js')).href);
       record = { agent, composite: computeComposite(agent.axes) };
     }
   }
+  if (!record) return bad(res, 404, 'agent_not_found', { slug });
 
-  if (!record) {
-    return bad(res, 404, 'agent_not_found', {
-      slug,
-      hint: 'Seeded agents only in the prototype, plus any admitted via the admin review flow.',
-    });
-  }
-
-  res.setHeader('X-Rate-Limit-Tier', auth.tier);
-  res.setHeader('X-Rate-Limit-Period', auth.period);
-  res.setHeader('X-Rate-Limit-Used', String(auth.usage));
-  res.setHeader('X-Rate-Limit-Limit', String(auth.limit));
-  return ok(res, serializeAgent(record.agent, record.composite, version));
+  res.setHeader('Cache-Control', 'public, max-age=300, stale-while-revalidate=3600');
+  return ok(res, serializePublic(record.agent, record.composite, version));
 }

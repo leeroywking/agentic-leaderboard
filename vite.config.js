@@ -32,6 +32,7 @@ export default defineConfig({
         submitSuccess: resolve(root, 'submit-success.html'),
         submitCancel: resolve(root, 'submit-cancel.html'),
         admin: resolve(root, 'admin.html'),
+        agentDynamic: resolve(root, 'agent.html'),
       },
     },
   },

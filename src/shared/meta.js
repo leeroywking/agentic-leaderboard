@@ -94,6 +94,10 @@ const pageMetaByPath = {
     title: 'Admin · Agentic Leaderboard',
     description: 'Reviewer queue — token-gated, noindex.',
   },
+  '/agent.html': {
+    title: 'Agent Passport · Agentic Leaderboard',
+    description: 'Dynamic agent passport — renders from the public API for agents admitted after the static dataset was built.',
+  },
 };
 
 export function getDefaultMeta(path) {

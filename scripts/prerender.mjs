@@ -44,6 +44,7 @@ const pages = [
   { html: 'submit-success.html', entry: '/src/pages/submit-success.js' },
   { html: 'submit-cancel.html', entry: '/src/pages/submit-cancel.js' },
   { html: 'admin.html', entry: '/src/pages/admin.js' },
+  { html: 'agent.html', entry: '/src/pages/agent-dynamic.js' },
 ];
 
 function setupDocument(html) {
