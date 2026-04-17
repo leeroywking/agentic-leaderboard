@@ -242,6 +242,71 @@ Worth it — explicit beats magic for a prototype someone is going to fork.
 
 ---
 
+## 2026-04-16 — Relying-party first, subject second for outreach
+
+**Decision.** First outreach batch targets relying parties (paying side) rather
+than subjects (listed side). Drafts in `docs/RELYING_PARTY_OUTREACH.md`.
+Tier 1 targets: CodeRabbit, Graphite, Greptile (AI code review),
+AI Agents Directory + Glama (registries), Credo AI (adjacent governance).
+Subject-side outreach (the existing `docs/CANDIDATE_REPOS.md` list) moves to
+Tier 3, pursued only once at least one relying-party pilot has signed.
+
+**Why.** Subject-side listings don't generate revenue until relying parties
+are paying. The subject-side work is also easier — a free Listed tier
+listing flows without much friction once the subject infra is built — so
+it's not the rate-limiter. Relying parties are. Also: one signed
+relying-party pilot is disproportionately credible. It makes the product a
+thing someone pays for, which is the load-bearing credibility step per the
+"monetization is the credibility signal" decision above.
+
+**Defensible if challenged.**
+- "Subjects are the supply side and you need supply first." → The current
+  sample dataset has 10 named agents with realistic shapes. That's enough
+  to demo the product to a relying party. Real subject supply grows
+  naturally once the product is live and the first relying party is
+  driving traffic to passport pages.
+- "Cold outreach to CodeRabbit/Graphite is low-hit-rate." → Agreed. The
+  doc caps at 10 cold emails per week across tiers, tracks follow-up
+  cadence, and suppresses after 14 days. The goal is one conversation,
+  not one hundred. The shortlist is specifically tuned to platforms with
+  visible agent-PR pain so the outreach has a real hook.
+- "Why not sell into enterprise (D&B-style) right away?" → Enterprise
+  procurement is 3-9 months. Our first revenue should come from platforms
+  that can commit in one meeting. Enterprise follows the pilot logos.
+
+---
+
+## 2026-04-16 — Prerender at build time
+
+**Decision.** `npm run build` now runs `vite build` followed by a
+`scripts/prerender.mjs` step that uses Vite's SSR module loader and a
+jsdom-backed document to render each page's `#app` content in Node and
+inject it into the built HTML file.
+
+**Why.** The prototype's pages were rendering entirely client-side, which
+means crawlers (Google, Bing, ChatGPT's browsing, Claude's WebSearch, and
+most LLM retrieval) would see only the empty shell `<div id="app"></div>`
+and miss the actual product pitch, pricing, and evidence. For a service
+whose whole premise is "be publicly inspectable," serving empty HTML to
+inspectors is a contradiction.
+
+**Alternatives considered.**
+- *Full rewrite to Astro or Next.js SSG:* correct long-term, but a 1-2 day
+  detour right now. Deferred.
+- *vite-plugin-ssr / vike:* introduces a plugin dependency and a routing
+  convention our app doesn't need.
+- *Puppeteer-based prerender:* heavier dependency (Chromium binary). Jsdom
+  with Vite SSR is enough because our pages are synchronous.
+
+**Tradeoff.** Browsers still run the bundled JS on load and overwrite
+`#app` with identical content. That means a split-second of re-rendering
+on page load. For a static prototype this is fine; for a production app
+with state, a proper hydration pattern would be needed (skip render when
+DOM is already populated). That can be added incrementally when the
+pages have real state beyond rendered content.
+
+---
+
 ## 2026-04-16 — GitHub-first for first verified-work connector
 
 **Decision.** The first integrated connector is GitHub (PR/commit/CI/release)
