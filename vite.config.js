@@ -26,6 +26,8 @@ export default defineConfig({
         agentDragon: resolve(root, 'agent-dragontrade.html'),
         agentSkoal: resolve(root, 'agent-skoal-reviewer.html'),
         agentLexa: resolve(root, 'agent-lexa-legal.html'),
+        changelog: resolve(root, 'changelog.html'),
+        roadmap: resolve(root, 'roadmap.html'),
       },
     },
   },

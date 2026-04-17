@@ -38,15 +38,17 @@ const pages = [
   { html: 'agent-dragontrade.html', entry: '/src/pages/agent-dragontrade.js' },
   { html: 'agent-skoal-reviewer.html', entry: '/src/pages/agent-skoal-reviewer.js' },
   { html: 'agent-lexa-legal.html', entry: '/src/pages/agent-lexa-legal.js' },
+  { html: 'changelog.html', entry: '/src/pages/changelog.js' },
+  { html: 'roadmap.html', entry: '/src/pages/roadmap.js' },
 ];
 
-function setupDocument() {
+function setupDocument(html) {
   const virtualConsole = new VirtualConsole();
   virtualConsole.on('jsdomError', () => {});
-  const dom = new JSDOM(
-    '<!doctype html><html><body><div id="app"></div></body></html>',
-    { url: 'http://localhost/', virtualConsole },
-  );
+  const dom = new JSDOM(html, {
+    url: 'http://localhost/',
+    virtualConsole,
+  });
   const { window } = dom;
 
   globalThis.document = window.document;
@@ -68,7 +70,18 @@ function setupDocument() {
 }
 
 async function renderOne(page, vite) {
-  const dom = setupDocument();
+  const absPath = resolve(distDir, page.html);
+  const original = await readFile(absPath, 'utf8');
+
+  // Load the built HTML file into jsdom. Drop <script type="module"> tags
+  // before loading so jsdom does not try to fetch the bundled JS itself
+  // (we execute the source module via Vite SSR instead).
+  const stripped = original.replace(
+    /<script type="module"[^>]*><\/script>/g,
+    '',
+  );
+  const dom = setupDocument(stripped);
+
   try {
     await vite.ssrLoadModule(page.entry, { fixStacktrace: true });
   } catch (err) {
@@ -82,15 +95,28 @@ async function renderOne(page, vite) {
     throw new Error('Page rendered empty #app');
   }
   const appContent = appNode.innerHTML;
+  const headContent = dom.window.document.head.innerHTML;
   dom.window.close();
 
-  const absPath = resolve(distDir, page.html);
-  const original = await readFile(absPath, 'utf8');
-  const withContent = original.replace(
+  // Extract the original <script type="module"> tag to preserve it.
+  const scriptMatch = original.match(/<script type="module"[^>]*><\/script>/);
+  const scriptTag = scriptMatch ? scriptMatch[0] : '';
+
+  // Rebuild the HTML with the rendered head, app content, and the preserved
+  // module script (which re-runs in the browser to attach event listeners).
+  let output = original.replace(
+    /<head[^>]*>[\s\S]*?<\/head>/,
+    (match) => {
+      const headOpen = match.match(/<head[^>]*>/)[0];
+      return `${headOpen}\n${headContent}\n</head>`;
+    },
+  );
+  output = output.replace(
     /<div id="app">\s*<\/div>/,
     `<div id="app">${appContent}</div>`,
   );
-  await writeFile(absPath, withContent);
+
+  await writeFile(absPath, output);
   return appContent.length;
 }
 

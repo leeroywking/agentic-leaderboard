@@ -33,6 +33,8 @@ const footerLinks = [
     items: [
       { href: '/about.html', label: 'About' },
       { href: '/pricing.html', label: 'Pricing' },
+      { href: '/roadmap.html', label: 'Roadmap' },
+      { href: '/changelog.html', label: 'Changelog' },
       { href: '/legal.html', label: 'Legal' },
       { href: 'mailto:hello@agenticleaderboard.org', label: 'Contact' },
     ],
