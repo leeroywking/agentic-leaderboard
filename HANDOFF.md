@@ -10,6 +10,15 @@ scores. Keep that distinction intact.
 ## Current Direction
 
 - Treat each agent as a durable public identity.
+- Position the public product as a reputation layer for working autonomous
+  agents: public profiles, portable badges, proof-linked rankings, and
+  confidence labels.
+- The homepage should follow an EC2-style infrastructure-product pattern:
+  short product definition, why it matters, product capabilities, sample
+  surface, use cases, and links to deeper details.
+- Do not put implementation internals, database choices, workers, schemas,
+  proof fees, or payment mechanics on the homepage. Those belong in docs or on
+  `/proof.html`.
 - Prefer separate ranking lanes over one global score at first.
 - Most promising lanes: verified work, deterministic arena/ELO, verified
   earnings, reliability, and efficiency.
@@ -49,10 +58,10 @@ scores. Keep that distinction intact.
   asynchronous review of leaderboard, badge, profile, proof, and outreach
   surfaces.
 - The Vite prototype in `index.html`, `src/main.js`, and `src/styles.css`
-  exercises the current human-facing direction with sample data, source-backed
-  measurement claims, and an implementation architecture section. It uses a
-  local Node 22 runtime installed through npm; run `npm run node`, `npm run
-  dev`, and `npm run build` for verification.
+  exercises the current human-facing direction with sample data, product
+  capabilities, use cases, a sample leaderboard, proof framing, and an agent
+  passport. It uses a local Node 22 runtime installed through npm; run `npm run
+  node`, `npm run dev`, and `npm run build` for verification.
 - Fee and submission mechanics live on `proof.html` and `src/proof.js`, not the
   homepage.
 - The public GitHub repository is
@@ -60,6 +69,8 @@ scores. Keep that distinction intact.
 - `AGENTS.md` contains repo-level collaboration and documentation instructions.
 - No backend schema, data model, payment integration, auth layer, or production
   implementation exists yet.
+- Last verified state: worktree clean, local dev server stopped, `npm run
+  build` passing, `main` pushed to `origin/main` at commit `0eb0056`.
 
 ## Open Questions
 
@@ -70,16 +81,20 @@ scores. Keep that distinction intact.
   signed manifest, or some combination?
 - What evidence should be rejected outright because it creates privacy,
   attribution, or fraud risk?
+- What should the first non-mock dataset look like for the sample leaderboard?
+- Which product capability should be built first: registry, passport, badge, or
+  verified-work lane?
 
 ## Suggested Next Steps
 
-1. Review `docs/AGENT_DISCOVERY_STRATEGY.md` and
-   `docs/PLATFORM_DESIGN.md`.
-2. Review `docs/CANDIDATE_REPOS.md` and approve or reject any first-contact
+1. Review the current homepage against `docs/HOMEPAGE_POSITIONING.md` before
+   adding new sections. Keep it product-led.
+2. Draft the first production-grade proof schema for the verified-work lane.
+3. Draft the agent registry/passport data model behind the product surface.
+4. Decide whether the next prototype should implement registry, passport,
+   badge, or verified-work submission first.
+5. Review `docs/CANDIDATE_REPOS.md` and approve or reject any first-contact
    candidates before outreach.
-3. Draft an agent registry schema with proof-quality labels.
-4. Draft submission requirements for the verified-work lane.
-5. Decide which `human_review/` option or hybrid should drive the next UI pass.
 6. Add source dates or access dates to volatile ecosystem claims in `README.md`.
 
 ## Commit Discipline
