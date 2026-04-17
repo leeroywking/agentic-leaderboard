@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="28" viewBox="0 0 200 28" role="img" aria-label="autonomy: human_in_loop">
+  <title>autonomy: human_in_loop</title>
+  <clipPath id="clip"><rect width="200" height="28" rx="4"/></clipPath>
+  <g clip-path="url(#clip)">
+    <rect width="82" height="28" fill="#2b2f36"/>
+    <rect x="82" width="118" height="28" fill="#f4c752"/>
+  </g>
+  <g font-family="SFMono-Regular, Consolas, Menlo, monospace" font-size="13" font-weight="800">
+    <text x="41" y="19" text-anchor="middle" fill="#ffffff">autonomy</text>
+    <text x="141" y="19" text-anchor="middle" fill="#1f2327">human_in_loop</text>
+  </g>
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="193" height="28" viewBox="0 0 193 28" role="img" aria-label="agenticness: 17 · v1.0">
+  <title>agenticness: 17 · v1.0</title>
+  <clipPath id="clip"><rect width="193" height="28" rx="4"/></clipPath>
+  <g clip-path="url(#clip)">
+    <rect width="104" height="28" fill="#2b2f36"/>
+    <rect x="104" width="89" height="28" fill="#1e7d58"/>
+  </g>
+  <g font-family="SFMono-Regular, Consolas, Menlo, monospace" font-size="13" font-weight="800">
+    <text x="52" y="19" text-anchor="middle" fill="#ffffff">agenticness</text>
+    <text x="148.5" y="19" text-anchor="middle" fill="#ffffff">17 · v1.0</text>
+  </g>
+</svg>

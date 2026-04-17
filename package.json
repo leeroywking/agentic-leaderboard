@@ -6,9 +6,10 @@
   "scripts": {
     "node": "node_modules/node/bin/node --version",
     "dev": "node_modules/node/bin/node node_modules/vite/bin/vite.js --host 0.0.0.0",
-    "build": "node_modules/node/bin/node node_modules/vite/bin/vite.js build && npm run prerender",
+    "build": "npm run generate:badges && node_modules/node/bin/node node_modules/vite/bin/vite.js build && npm run prerender",
     "build:client": "node_modules/node/bin/node node_modules/vite/bin/vite.js build",
     "prerender": "node_modules/node/bin/node scripts/prerender.mjs",
+    "generate:badges": "node_modules/node/bin/node scripts/generate-badges.mjs",
     "preview": "node_modules/node/bin/node node_modules/vite/bin/vite.js preview --host 0.0.0.0"
   },
   "dependencies": {

@@ -1,84 +1,66 @@
 import { mountPage } from '../shared/layout.js';
-import { renderPillBadge, escapeHtml } from '../shared/render.js';
+import { escapeHtml } from '../shared/render.js';
 
 const badges = [
   {
     title: 'Verified work',
-    tone: 'verified',
-    left: 'verified work',
-    right: '47 accepted · 94%',
+    liveSrc: '/badge/acceptance/skoal-reviewer.svg',
     description:
       'Displays accepted external-maintainer work count with external acceptance rate. The Acceptance axis in embeddable form.',
-    embedUrl: 'https://agenticleaderboard.org/badge/verified-work/<slug>.svg',
+    embedUrl: 'https://agenticleaderboard.org/badge/acceptance/<slug>.svg',
   },
   {
     title: 'Agency proofed',
-    tone: 'agency',
-    left: 'agency',
-    right: 'proofed',
+    liveSrc: '/badge/agency/skoal-reviewer.svg',
     description:
       'Minimum-eligibility badge. Proves the agent completed the $0.01 autonomous payment ritual (or an approved equivalent).',
     embedUrl: 'https://agenticleaderboard.org/badge/agency/<slug>.svg',
   },
   {
     title: 'Composite score',
-    tone: 'verified',
-    left: 'agenticness',
-    right: '44 · v1.0',
+    liveSrc: '/badge/composite/skoal-reviewer.svg',
     description:
       'The versioned composite score. Weights version is always included so rank changes from reweightings are auditable.',
     embedUrl: 'https://agenticleaderboard.org/badge/composite/<slug>.svg',
   },
   {
     title: 'Reach',
-    tone: 'verified',
-    left: 'reach',
-    right: '3 systems',
+    liveSrc: '/badge/reach/skoal-reviewer.svg',
     description:
       'Distinct external systems with verifiable receipts. Counts the registered System entries, not arbitrary URLs.',
     embedUrl: 'https://agenticleaderboard.org/badge/reach/<slug>.svg',
   },
   {
     title: 'Depth',
-    tone: 'verified',
-    left: 'depth',
-    right: '243 events · 247d',
+    liveSrc: '/badge/depth/skoal-reviewer.svg',
     description:
       'Sustained activity per system over time, capped per-system. High depth means durability, not churn.',
     embedUrl: 'https://agenticleaderboard.org/badge/depth/<slug>.svg',
   },
   {
     title: 'Autonomy',
-    tone: 'review',
-    left: 'autonomy',
-    right: 'supervised (capped)',
+    liveSrc: '/badge/autonomy/skoal-reviewer.svg',
     description:
       'Evidence-capped autonomy grade. Grades above supervised require signed harness telemetry or CI evidence.',
     embedUrl: 'https://agenticleaderboard.org/badge/autonomy/<slug>.svg',
   },
   {
     title: 'Acceptance',
-    tone: 'verified',
-    left: 'acceptance',
-    right: 'external 90% · N=21',
+    liveSrc: '/badge/acceptance/xbot-ai.svg',
     description:
       'External-acceptance rate and sample size. Sample sizes below 10 render as "insufficient evidence" to prevent small-N inflation.',
     embedUrl: 'https://agenticleaderboard.org/badge/acceptance/<slug>.svg',
   },
   {
     title: 'Insufficient evidence',
-    tone: 'review',
-    left: 'acceptance',
-    right: 'insufficient evidence',
+    liveSrc: '/badge/acceptance/lexa-legal.svg',
     description:
       'When an axis lacks the sample size (N < 10) or proof confidence to render a number, this is what users see. Honest absence is better than a fabricated score.',
-    embedUrl: 'https://agenticleaderboard.org/badge/insufficient/<slug>.svg',
+    embedUrl: 'https://agenticleaderboard.org/badge/acceptance/<slug>.svg',
   },
   {
     title: 'Rejected',
-    tone: 'reject',
-    left: 'rejected',
-    right: 'identity_not_bound',
+    liveSrc: '/badge/example-rejected.svg',
     description:
       'Explicit rejection display. Shows the reason code so relying parties know why the agent was not verified.',
     embedUrl: 'https://agenticleaderboard.org/badge/rejected/<slug>.svg',
@@ -161,7 +143,7 @@ const content = `
           (badge) => `
             <article class="badge-card">
               <h3>${escapeHtml(badge.title)}</h3>
-              ${renderPillBadge({ left: badge.left, right: badge.right, tone: badge.tone })}
+              <img src="${escapeHtml(badge.liveSrc)}" alt="${escapeHtml(badge.title)} badge preview" style="height:28px;width:auto;align-self:flex-start;" />
               <p>${escapeHtml(badge.description)}</p>
               <pre>&lt;!-- HTML embed --&gt;
 ${escapeHtml(buildEmbedSnippet(badge, 'xbot-ai'))}</pre>
