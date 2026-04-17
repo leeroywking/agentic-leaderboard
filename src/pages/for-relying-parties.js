@@ -122,7 +122,7 @@ const content = `
           <li>Community support</li>
         </ul>
         <div class="price-cta">
-          <a href="mailto:api@agenticleaderboard.org?subject=Sandbox%20access">Get a key</a>
+          <a href="#sandbox-form">Get a key</a>
         </div>
       </article>
       <article class="pricing-card featured">
@@ -137,7 +137,7 @@ const content = `
           <li>Weekly integration check-ins</li>
         </ul>
         <div class="price-cta">
-          <a href="mailto:pilots@agenticleaderboard.org?subject=Pilot%20partnership">Apply for a pilot slot</a>
+          <a href="#pilot-form">Apply for a pilot slot</a>
         </div>
       </article>
       <article class="pricing-card">
@@ -194,19 +194,63 @@ const content = `
         onto Standard at the 12-month mark without price change.
       </li>
     </ul>
-    <div class="cta-panel">
-      <div>
-        <h3>Shortlist criteria</h3>
-        <p>
-          We prioritize platforms receiving inbound agent work (agent
-          marketplaces, MCP registries, OSS projects, AI code review products)
-          over pure observability or analytics layers.
-        </p>
-      </div>
-      <div class="cta-actions">
-        <a href="mailto:pilots@agenticleaderboard.org?subject=Pilot%20application">Apply</a>
-        <a class="secondary" href="/how-it-works.html">Review process</a>
-      </div>
+    <div class="fee-card" id="sandbox-form" style="max-width:720px;margin-top:20px;">
+      <p class="eyebrow">Sandbox key (free)</p>
+      <form data-sandbox-form>
+        <div class="form-row">
+          <label for="sb-email">Work email</label>
+          <input id="sb-email" name="email" type="email" required />
+        </div>
+        <div class="form-row">
+          <label for="sb-company">Company (optional)</label>
+          <input id="sb-company" name="company" />
+        </div>
+        <div class="form-row">
+          <label for="sb-use">Planned use case (optional)</label>
+          <textarea id="sb-use" name="use_case" rows="2"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit" data-sandbox-submit>Issue sandbox key</button>
+        </div>
+      </form>
+      <div data-sandbox-result aria-live="polite" style="margin-top:14px;"></div>
+    </div>
+
+    <div class="fee-card" id="pilot-form" style="max-width:720px;margin-top:18px;">
+      <p class="eyebrow">Pilot partner application</p>
+      <form data-pilot-form>
+        <div class="form-row">
+          <label for="p-company">Company</label>
+          <input id="p-company" name="company" required />
+        </div>
+        <div class="form-row">
+          <label for="p-email">Work email</label>
+          <input id="p-email" name="email" type="email" required />
+        </div>
+        <div class="form-row">
+          <label for="p-url">Platform URL</label>
+          <input id="p-url" name="platform_url" placeholder="https://…" />
+        </div>
+        <div class="form-row">
+          <label for="p-use">Use case and integration surface</label>
+          <textarea id="p-use" name="use_case" rows="3" required></textarea>
+        </div>
+        <fieldset class="form-row tier-row">
+          <legend>Tier</legend>
+          <label class="tier-option">
+            <input type="radio" name="tier" value="pilot" checked />
+            <span><strong>Pilot</strong> — $299/month, 12-month lock</span>
+          </label>
+          <label class="tier-option">
+            <input type="radio" name="tier" value="standard" />
+            <span><strong>Standard</strong> — $999/month, 25K lookups/month</span>
+          </label>
+        </fieldset>
+        <div class="form-actions">
+          <button type="submit" data-pilot-submit>Continue to Stripe Checkout</button>
+        </div>
+      </form>
+      <div data-pilot-result aria-live="polite" style="margin-top:14px;"></div>
     </div>
   </section>
 `;
@@ -244,3 +288,79 @@ inputEl.addEventListener('keydown', (event) => {
     runLookup();
   }
 });
+
+function showFormResult(el, html, kind = 'info') {
+  const color = kind === 'error' ? 'var(--red)' : kind === 'success' ? 'var(--green)' : 'var(--ink)';
+  el.innerHTML = `<p style="color:${color};font-weight:800;">${html}</p>`;
+}
+
+async function postForm(form, endpoint, resultEl, submitBtn) {
+  submitBtn.disabled = true;
+  showFormResult(resultEl, 'Submitting…');
+  const payload = Object.fromEntries(new FormData(form).entries());
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      showFormResult(resultEl, `Failed: ${data.error || response.statusText}`, 'error');
+      submitBtn.disabled = false;
+      return null;
+    }
+    return data;
+  } catch (err) {
+    showFormResult(resultEl, `Network error: ${err.message}`, 'error');
+    submitBtn.disabled = false;
+    return null;
+  }
+}
+
+const sandboxForm = document.querySelector('[data-sandbox-form]');
+if (sandboxForm) {
+  const resultEl = document.querySelector('[data-sandbox-result]');
+  const submitBtn = document.querySelector('[data-sandbox-submit]');
+  sandboxForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const data = await postForm(sandboxForm, '/api/sandbox-key', resultEl, submitBtn);
+    if (!data) return;
+    if (data.api_key_preview) {
+      showFormResult(
+        resultEl,
+        `Key issued: <code>${data.api_key_preview}</code> — also sent by email. Monthly lookup limit: 100.`,
+        'success',
+      );
+    } else {
+      showFormResult(resultEl, 'Key issued. Check your email.', 'success');
+    }
+    submitBtn.disabled = false;
+  });
+}
+
+const pilotForm = document.querySelector('[data-pilot-form]');
+if (pilotForm) {
+  const resultEl = document.querySelector('[data-pilot-result]');
+  const submitBtn = document.querySelector('[data-pilot-submit]');
+  pilotForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const data = await postForm(pilotForm, '/api/pilot-request', resultEl, submitBtn);
+    if (!data) return;
+    if (data.checkout_url) {
+      showFormResult(resultEl, 'Redirecting to Stripe Checkout…', 'success');
+      window.location.href = data.checkout_url;
+      return;
+    }
+    showFormResult(
+      resultEl,
+      `Request received — id <code>${data.submission_id}</code>. ${
+        data.stripe_configured === false
+          ? 'Stripe is not yet configured; we will follow up by email to complete payment.'
+          : 'We will follow up shortly.'
+      }`,
+      'success',
+    );
+    submitBtn.disabled = false;
+  });
+}

@@ -82,6 +82,18 @@ const pageMetaByPath = {
     description:
       'Point us at any public GitHub repo with an AGENT.md manifest and see a live preview passport — manifest parsed, PR and commit data computed live from the GitHub API.',
   },
+  '/submit-success.html': {
+    title: 'Submission Received · Agentic Leaderboard',
+    description: 'Payment received. Your Agentic Leaderboard submission is in review.',
+  },
+  '/submit-cancel.html': {
+    title: 'Checkout Cancelled · Agentic Leaderboard',
+    description: 'Checkout cancelled. Your Agentic Leaderboard submission was not charged.',
+  },
+  '/admin.html': {
+    title: 'Admin · Agentic Leaderboard',
+    description: 'Reviewer queue — token-gated, noindex.',
+  },
 };
 
 export function getDefaultMeta(path) {

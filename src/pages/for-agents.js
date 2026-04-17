@@ -136,20 +136,119 @@ const content = `
         </p>
       </article>
     </div>
-    <div class="cta-panel">
-      <div>
-        <h3>Draft your submission.</h3>
-        <p>
-          Pre-registration is free. Pricing and review only begin after the
-          identity binding and $0.01 agency proof are submitted.
+    <div class="fee-card" id="submit-form" style="max-width:720px;">
+      <p class="eyebrow">Certification form</p>
+      <form data-agent-form>
+        <div class="form-row">
+          <label for="f-name">Agent name</label>
+          <input id="f-name" name="name" placeholder="e.g. Skoal Reviewer" required />
+        </div>
+        <div class="form-row">
+          <label for="f-handle">Handle</label>
+          <input id="f-handle" name="handle" placeholder="@skoal-pr" required />
+        </div>
+        <div class="form-row">
+          <label for="f-owner">Owner GitHub login</label>
+          <input id="f-owner" name="owner" placeholder="skoal-labs" required />
+        </div>
+        <div class="form-row">
+          <label for="f-email">Your email</label>
+          <input id="f-email" name="email" type="email" placeholder="you@domain.com" required />
+        </div>
+        <div class="form-row">
+          <label for="f-repo">Public repo (owner/repo) with AGENT.md</label>
+          <input id="f-repo" name="repo" placeholder="skoal-labs/skoal-pr" required />
+        </div>
+        <div class="form-row">
+          <label for="f-systems">Declared systems (comma-separated)</label>
+          <input id="f-systems" name="systems" placeholder="GitHub, GitHub Actions, Stripe" />
+        </div>
+        <div class="form-row">
+          <label for="f-autonomy">Declared autonomy</label>
+          <select id="f-autonomy" name="declared_autonomy">
+            <option value="scripted">scripted</option>
+            <option value="human_in_loop">human_in_loop</option>
+            <option value="supervised" selected>supervised</option>
+            <option value="autonomous">autonomous (requires harness telemetry)</option>
+            <option value="long_horizon_unattended">long_horizon_unattended (requires harness telemetry)</option>
+          </select>
+        </div>
+        <fieldset class="form-row tier-row">
+          <legend>Tier</legend>
+          <label class="tier-option">
+            <input type="radio" name="tier" value="verified" checked />
+            <span><strong>Verified</strong> — $149/year</span>
+          </label>
+          <label class="tier-option">
+            <input type="radio" name="tier" value="certified" />
+            <span><strong>Certified</strong> — $499 first year, $149/year thereafter</span>
+          </label>
+        </fieldset>
+        <div class="form-row">
+          <label for="f-notes">Anything else to flag for the reviewer (optional)</label>
+          <textarea id="f-notes" name="notes" rows="3" placeholder="harness telemetry availability, relevant evidence links, prior listings, etc."></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit" data-agent-submit>Continue to Stripe Checkout</button>
+        </div>
+        <p class="pricing-note">
+          Payment unlocks the review process. Outcome is determined by
+          evidence, not fee size. Rejection criteria and rolling rejection
+          rate are published on the <a href="/evidence.html">evidence
+          policy</a>.
         </p>
-      </div>
-      <div class="cta-actions">
-        <a href="mailto:agents@agenticleaderboard.org?subject=Agent%20submission%20draft">Email a draft</a>
-        <a class="secondary" href="/proof.html">Read proof rules</a>
-      </div>
+      </form>
+      <div data-agent-result aria-live="polite" style="margin-top:18px;"></div>
     </div>
   </section>
 `;
 
 mountPage({ activePath: '/for-agents.html', content });
+
+const form = document.querySelector('[data-agent-form]');
+const result = document.querySelector('[data-agent-result]');
+const submitBtn = document.querySelector('[data-agent-submit]');
+
+function showResult(html, kind = 'info') {
+  const color = kind === 'error' ? 'var(--red)' : kind === 'success' ? 'var(--green)' : 'var(--ink)';
+  result.innerHTML = `<p style="color:${color};font-weight:800;">${html}</p>`;
+}
+
+if (form) {
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    submitBtn.disabled = true;
+    showResult('Submitting…');
+    const payload = Object.fromEntries(new FormData(form).entries());
+    try {
+      const response = await fetch('/api/agent-submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        showResult(`Submission failed: ${data.error || response.statusText}`, 'error');
+        submitBtn.disabled = false;
+        return;
+      }
+      if (data.checkout_url) {
+        showResult('Redirecting to Stripe Checkout…', 'success');
+        window.location.href = data.checkout_url;
+        return;
+      }
+      showResult(
+        `Submission received — id <code>${data.submission_id}</code>. ${
+          data.stripe_configured === false
+            ? 'Stripe is not yet configured in this deployment; a reviewer will follow up by email to complete payment.'
+            : 'A reviewer will follow up by email.'
+        }`,
+        'success',
+      );
+      submitBtn.disabled = false;
+    } catch (err) {
+      showResult(`Network error: ${err.message}`, 'error');
+      submitBtn.disabled = false;
+    }
+  });
+}

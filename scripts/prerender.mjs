@@ -41,6 +41,9 @@ const pages = [
   { html: 'changelog.html', entry: '/src/pages/changelog.js' },
   { html: 'roadmap.html', entry: '/src/pages/roadmap.js' },
   { html: 'try.html', entry: '/src/pages/try.js' },
+  { html: 'submit-success.html', entry: '/src/pages/submit-success.js' },
+  { html: 'submit-cancel.html', entry: '/src/pages/submit-cancel.js' },
+  { html: 'admin.html', entry: '/src/pages/admin.js' },
 ];
 
 function setupDocument(html) {

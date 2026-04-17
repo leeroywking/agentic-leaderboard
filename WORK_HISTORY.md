@@ -307,6 +307,72 @@ pages have real state beyond rendered content.
 
 ---
 
+## 2026-04-16 — End-to-end backend: Stripe Checkout, Upstash, Resend, admin
+
+**Decision.** Ship a minimum viable backend that takes real customers end
+to end: agent submission form → Stripe Checkout → webhook-driven status
+transition → admin review → email outcomes. Relying-party sandbox keys
+issue instantly (free tier). Relying-party pilot tier runs through
+Stripe Checkout with $299/mo subscription. Every endpoint degrades
+gracefully when providers aren't configured.
+
+Stack:
+- Vercel serverless functions at `api/*.mjs` (ESM Node handlers).
+- Upstash Redis via `@upstash/redis` for persistence, with in-memory Map
+  fallback so the handlers never crash on missing config.
+- Stripe Checkout Sessions, with webhook signature verification.
+- Resend for transactional email, with console-log fallback.
+- Admin surface at `/admin.html` gated by `ADMIN_TOKEN`.
+
+**Why Upstash over Vercel KV.** Vercel KV was deprecated in 2026-Q1 in
+favor of Upstash Redis via the Vercel Marketplace. Same underlying
+provider, supported path.
+
+**Why graceful degradation per provider.** The prototype needs to be
+deployable with any subset of env vars. A developer cloning the repo
+should be able to `npm run build && npm run smoke:api` without setting
+up Stripe, Resend, and Upstash accounts first. Real deployments
+incrementally add env vars; each added var enables the next surface.
+
+**Known gaps to close before the first paying customer.**
+1. Admin approval of a subject submission does not yet auto-generate a
+   passport HTML page. The static `src/shared/agents.js` is the source
+   for all passport pages, so adding a new agent requires editing that
+   file and redeploying. This is acceptable for the first 1–5 customers
+   and forces the reviewer to actually read the submission, but it
+   must be automated before scaling. Plan: extend
+   `api/v1/agents/[slug].mjs` to check Upstash for approved-but-not-yet-
+   published submissions and serve a generated passport response, then
+   add a client-side passport renderer that handles both static and
+   dynamic slugs.
+2. Stripe subscription renewal logic is not implemented. For the
+   Verified tier ($149/yr), the Stripe subscription auto-renews;
+   webhook handler does nothing special on renewal (no status change
+   needed). For Certified ($499 first year, $149/yr after), the
+   second-year billing has to be manual via Stripe invoice until a
+   proper renewal flow ships. Tolerable for the first cohort.
+3. `/api/v1/agents/skoal-reviewer.json` (static file in `public/api/`)
+   is still served unauthenticated as the public demo endpoint used by
+   the `/for-relying-parties` lookup widget. The authenticated
+   `/api/v1/agents/skoal-reviewer` (no `.json`) is the real API. Both
+   coexist — the static is intentional for the demo. Document the
+   distinction prominently before pilots onboard to avoid confusion.
+
+**Defensible if challenged.**
+- "Should have used Supabase/Postgres instead of Redis." Redis is
+  enough for submissions + API keys + usage counters at the first-100-
+  customer scale. Relational schema becomes useful when we need joins
+  (submissions × proof events × badges) — not before.
+- "Should have used Clerk/Auth0 for admin auth." A single `ADMIN_TOKEN`
+  env var is enough for a one-person review pass. Adding an auth
+  provider for zero scale is premature.
+- "Forms should POST to Formspree instead of building a backend."
+  Formspree routes to email; we need real data capture (composite
+  scoring, rate limiting, API key issuance) that email cannot provide.
+  The backend is what makes the product a product.
+
+---
+
 ## 2026-04-16 — Ship a client-side "try it" before the real connector
 
 **Decision.** Build `/try.html` as a client-side-only demo that takes a
