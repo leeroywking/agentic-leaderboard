@@ -1,104 +1,176 @@
 # Handoff
 
-This repo is intentionally starting as a research/product-design repo with a
-small static prototype for reviewing product direction.
-
-The core product idea is a leaderboard for **named AI agent identities** with
-persistent reputation, not a leaderboard for base LLMs or model benchmark
-scores. Keep that distinction intact.
+This repo is a research and product-design repo with a multi-page static
+prototype that covers the surfaces a buyer needs to see before they can say
+yes. The core product idea is a leaderboard for **named AI agent identities**
+with persistent reputation, not a leaderboard for base LLMs or model benchmark
+scores.
 
 ## Current Direction
 
 - Treat each agent as a durable public identity.
-- Position the public product as a reputation layer for working autonomous
-  agents: public profiles, portable badges, proof-linked rankings, and
-  confidence labels.
-- The homepage should follow an EC2-style infrastructure-product pattern:
-  short product definition, why it matters, product capabilities, sample
-  surface, use cases, and links to deeper details.
+- Measure agenticness as a *shape* across four evidence-backed axes — Reach,
+  Depth, Autonomy, Acceptance — defined in `docs/MEASUREMENT_MODEL.md`.
+  Composite score uses versioned weights (`v1.0`: `0.20 / 0.25 / 0.20 / 0.35`)
+  and is always displayed alongside the shape.
+- Lanes (`agency`, `verified_work`, `reliability`, `economic`, and later
+  `arena`) are proof-event intake categories, not the same thing as
+  agenticness axes. Lanes feed axes.
+- Use W3C Verifiable Credentials role vocabulary: the agent is the **subject**,
+  whoever produces evidence is the **issuer**, whoever consumes the reputation
+  to make a decision is the **relying party**, Agentic Leaderboard is the
+  **platform**.
+- Monetize from day one. Load-bearing invariant: **money guarantees process,
+  not outcome.** UL / BBB / D&B / credit-bureau precedent. Rejection rate is
+  public and includes sponsor-associated agents.
+- V1 pricing (calibrated against comparables — see `WORK_HISTORY.md`):
+  - **Subject:** free Listed, $149/yr Verified, $499 first-year Certified.
+  - **Relying party:** free Sandbox (100 lookups/mo), $299/mo Pilot (5K),
+    $999/mo Standard (25K), custom Enterprise.
+  - **Charter sponsors:** $2,500/mo Sponsor, $5,000/mo Verified issuer.
+- The USD $0.01 autonomous payment stays strictly as a proof-of-agency ritual,
+  not as the commercial transaction. Per-proof-update $0.01 fees exist as a
+  spam filter, not revenue.
+- First verified-work connector is GitHub (PR / commit / CI / release). Wedge:
+  17M AI-generated PRs/month on GitHub with ~90% reported noise rate (early
+  2026). Maintainers and agent marketplaces can't keep up without a reputation
+  signal.
 - Do not put implementation internals, database choices, workers, schemas,
   proof fees, or payment mechanics on the homepage. Those belong in docs or on
-  `/proof.html`.
-- Prefer separate ranking lanes over one global score at first.
-- Most promising lanes: verified work, deterministic arena/ELO, verified
-  earnings, reliability, and efficiency.
+  `/proof.html`, `/pricing.html`, and `/how-it-works.html`.
 - Proof quality matters more than claim size. A small verified accomplishment
   should outrank a large unverified screenshot.
-- Require minimum real-world agency proof before leaderboard eligibility. The
-  current default is an autonomous payment of USD 0.01 or equivalent, used only
-  to prove the agent can act through an external system.
-- Charge USD 0.01 per proof update or measured work item as the platform's only
-  intended financialization. This offsets infrastructure/review costs and does
-  not buy rank. It should also discourage no-op PRs, dust transactions, and
-  other wasteful proof spam.
-- Be skeptical of OpenClaw-style earnings claims unless backed by payment
-  processor data, on-chain records, accepted bounties, merged PRs, or other
-  auditable evidence. Current notes in `README.md` treat these claims as public
-  reports with uneven proof quality, not verified facts.
 - Avoid collecting private system prompts, secrets, API keys, or screenshots
   with PII as proof.
 
 ## Current Repo State
 
-- `README.md` contains the initial research notes, product implications, and
-  suggested proof standards.
-- `docs/AGENT_DISCOVERY_STRATEGY.md` outlines agent-facing discovery, GitHub
-  outreach constraints, badge seeding, and rollout metrics.
-- `docs/PLATFORM_DESIGN.md` is the current platform design baseline for future
-  implementation agents.
-- `docs/MEASUREMENT_MODEL.md` defines what the leaderboard should and should
-  not measure, with source anchors for future implementation agents.
-- `docs/HOMEPAGE_POSITIONING.md` explains why the homepage follows an
-  EC2-style infrastructure-product structure and leads with trust, portable
-  reputation, and proof-backed badges while keeping fee mechanics and
-  implementation internals off the homepage.
-- `docs/CANDIDATE_REPOS.md` contains a manually reviewable seed list for
-  possible future repo outreach. It is not an approval to open issues.
-- `human_review/` contains ten varied human-facing option packets for
-  asynchronous review of leaderboard, badge, profile, proof, and outreach
-  surfaces.
-- The Vite prototype in `index.html`, `src/main.js`, and `src/styles.css`
-  exercises the current human-facing direction with sample data, product
-  capabilities, use cases, a sample leaderboard, proof framing, and an agent
-  passport. It uses a local Node 22 runtime installed through npm; run `npm run
-  node`, `npm run dev`, and `npm run build` for verification.
-- Fee and submission mechanics live on `proof.html` and `src/proof.js`, not the
-  homepage.
-- The public GitHub repository is
-  `https://github.com/leeroywking/agentic-leaderboard`.
-- `AGENTS.md` contains repo-level collaboration and documentation instructions.
-- No backend schema, data model, payment integration, auth layer, or production
-  implementation exists yet.
-- Last verified state: worktree clean, local dev server stopped, `npm run
-  build` passing, `main` pushed to `origin/main` at commit `0eb0056`.
+### Documentation
+
+- `README.md` — research notes on existing named-agent leaderboards, Felix /
+  Kelly Claude / ClawFreelance earnings claims, proof standards, and a pointer
+  to the axes in `docs/MEASUREMENT_MODEL.md`.
+- `AGENTS.md` — repo-level collaboration and commit discipline.
+- `WORK_HISTORY.md` — decision journal with research citations, defensible
+  positions, and reversals. Every non-obvious pricing or product decision is
+  logged here so it can be challenged and defended.
+- `docs/MEASUREMENT_MODEL.md` — what the leaderboard measures, including the
+  four axes, per-axis computation plans, v1 composite weights, and display
+  guidance across leaderboard row, passport, and embeddable badge.
+- `docs/PLATFORM_DESIGN.md` — current platform design baseline: data model,
+  `System` registry, `AgentAxisScore`, `AgentCompositeScore`, stack decisions.
+- `docs/HOMEPAGE_POSITIONING.md` — EC2-style positioning plus shape-display
+  rules.
+- `docs/AGENT_DISCOVERY_STRATEGY.md` — outreach constraints and badge seeding.
+- `docs/CANDIDATE_REPOS.md` — manual review list for potential first-contact.
+
+### Prototype
+
+Multi-page Vite static site. Configured via `vite.config.js`. Every page
+imports shared modules from `src/shared/`, so data and rendering stay
+consistent.
+
+Pages (all in repo root, paired with `src/pages/*.js` entries):
+
+- `index.html` — homepage with hero, value pillars, agenticness section,
+  sample leaderboard, featured passport, use cases, CTA.
+- `agents.html` — registry of all sample agents with certification/lane filters.
+- `leaderboard.html` — verified-work lane with sort by composite or any axis.
+- `for-agents.html` — subject-side conversion page.
+- `for-relying-parties.html` — relying-party conversion + pilot tiers.
+- `pricing.html` — subject, relying-party, and charter sponsor pricing,
+  plus comparable-research backup.
+- `how-it-works.html` — submission pipeline with rejection-rate philosophy
+  and evidence-degradation rules.
+- `evidence.html` — accepted evidence types, rejected by default, rolling
+  rejection-rate framing.
+- `badges.html` — SVG badge catalog with HTML and Markdown embed snippets,
+  usage policy.
+- `proof.html` — updated: $0.01 as ritual, pricing as commercial.
+- `faq.html` — 12-question FAQ covering identity, pricing, composite,
+  rejection, earnings, integrations, and competitive positioning.
+- `about.html` — mission, method, stewardship, contact.
+- `legal.html` — plain-language terms summary + transparency commitments.
+- `agent-*.html` — five sample passports with 4-axis radar, continuity
+  sparkline, proof timeline, identity bindings, embeddable badge preview.
+
+Shared modules in `src/shared/`:
+
+- `agents.js` — canonical sample dataset (10 named agents).
+- `scoring.js` — weights, weights version, axis order and metadata, composite
+  computation, ranking helper.
+- `render.js` — glyph, radar, sparkline, axis detail grid, agent row, pill
+  badge renderers.
+- `nav.js` — topbar + footer.
+- `layout.js` — `mountPage({ activePath, content })` helper used by every
+  page to attach chrome.
+
+Public assets in `public/` (copied through Vite's static asset pipeline):
+
+- `llms.txt` — curated agent-readable index of every public surface.
+- `robots.txt` — allow normal search + AI crawlers; sitemap reference.
+- `.well-known/agentic-leaderboard.json` — discovery manifest with axes,
+  weights, tiers, and policies.
+
+Build verified: `npm run build` produces 16 HTML pages plus `llms.txt`,
+`robots.txt`, and `.well-known/`. Total gzipped CSS 4.7kB; per-page JS
+between 0.14kB (passport-thin entries) and 12.2kB (agent registry).
+
+### Known limitations of the prototype
+
+- Pages render client-side via JS after load. Search and LLM crawlers will
+  see only the HTML shell unless a pre-render step is added. The fix is
+  either Vite SSG (e.g. `vite-plugin-ssr` / `@sveltejs/kit`-style prerender)
+  or a build-time jsdom pass that captures the rendered DOM per page. This
+  is a deploy-before-GA task, not a blocker for design-partner conversations.
+- No backend, auth, submissions, payments, or API endpoints are implemented.
+  Pricing pages reference mailto: links for early conversations rather than
+  a checkout flow. This is consistent with "design-partner pilot" v1 motion.
+- Submission connectors (GitHub PR/commit/CI, on-chain, payment processor)
+  are described in `docs/PLATFORM_DESIGN.md` but not coded.
+- Sample agent data is curated by hand. Nothing is fetched from live sources.
+
+### Public repo
+
+- `https://github.com/leeroywking/agentic-leaderboard`.
 
 ## Open Questions
 
-- Which first lane should be specified: verified work, deterministic arena/ELO,
-  or verified earnings?
-- What minimum proof schema is needed before accepting named-agent submissions?
-- How should agent identity be represented: owner handle, public key, wallet,
-  signed manifest, or some combination?
-- What evidence should be rejected outright because it creates privacy,
-  attribution, or fraud risk?
-- What should the first non-mock dataset look like for the sample leaderboard?
-- Which product capability should be built first: registry, passport, badge, or
-  verified-work lane?
+- Which first paid design partner do we target? (Candidates in
+  `WORK_HISTORY.md`: agent marketplaces, MCP registry operators, AI code
+  review products, agent-PR-heavy OSS projects.)
+- Is the Verified tier at $149/yr correctly calibrated, or should it be
+  lower (to capture individual open-source agent operators) or higher (to
+  signal institutional seriousness)?
+- Should the composite weights be v1.0 at launch, or should Acceptance be
+  weighted even higher (e.g. `0.15 / 0.2 / 0.15 / 0.5`) until other axes
+  have better connector coverage?
+- Does the rejection-rate philosophy belong on `/how-it-works.html` or on
+  `/evidence.html`, or should it have its own page?
+- Pre-render strategy — jsdom build hook vs. Vite SSG plugin vs. port the
+  rendering to a SSR framework (Astro, 11ty, Next.js App Router)?
 
 ## Suggested Next Steps
 
-1. Review the current homepage against `docs/HOMEPAGE_POSITIONING.md` before
-   adding new sections. Keep it product-led.
-2. Draft the first production-grade proof schema for the verified-work lane.
-3. Draft the agent registry/passport data model behind the product surface.
-4. Decide whether the next prototype should implement registry, passport,
-   badge, or verified-work submission first.
-5. Review `docs/CANDIDATE_REPOS.md` and approve or reject any first-contact
-   candidates before outreach.
-6. Add source dates or access dates to volatile ecosystem claims in `README.md`.
+1. Stand up the Verified-tier signup flow with one real payment provider
+   (Stripe) against the certification fee model in `WORK_HISTORY.md`.
+2. Ship the first relying-party pilot conversation using
+   `/for-relying-parties.html` as the sales page. Three pilot slots are
+   explicitly offered; log who we reach out to in `WORK_HISTORY.md`.
+3. Build the GitHub-connector subset: read a repo's `AGENT.md`, verify
+   identity binding, fetch PR / CI / commit evidence, map to proof events.
+4. Add pre-rendering (jsdom-based static output) before any public launch.
+5. Add the rolling 90-day rejection-rate dashboard referenced from
+   `/evidence.html`.
+6. Commission outside review of the rejection-rate dataset at 90 days.
 
 ## Commit Discipline
 
 - Make small commits after each coherent doc/design/schema/implementation
   change.
+- Log every non-obvious decision in `WORK_HISTORY.md` with the research or
+  reasoning behind it. If a user challenges a decision on next review, defend
+  with data from `WORK_HISTORY.md` or from the cited source.
 - Keep sources linked and label volatile claims with dates where possible.
+- Decisions are append-only in `WORK_HISTORY.md` — if a decision is reversed,
+  add a reversal entry below the original, do not rewrite history.
