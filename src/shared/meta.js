@@ -77,6 +77,11 @@ const pageMetaByPath = {
     description:
       'What is next. Public roadmap tied to the evidence model, the proof connectors, and pilot commitments.',
   },
+  '/try.html': {
+    title: 'Try It · Agentic Leaderboard',
+    description:
+      'Point us at any public GitHub repo with an AGENT.md manifest and see a live preview passport — manifest parsed, PR and commit data computed live from the GitHub API.',
+  },
 };
 
 export function getDefaultMeta(path) {

@@ -28,6 +28,7 @@ export default defineConfig({
         agentLexa: resolve(root, 'agent-lexa-legal.html'),
         changelog: resolve(root, 'changelog.html'),
         roadmap: resolve(root, 'roadmap.html'),
+        try: resolve(root, 'try.html'),
       },
     },
   },

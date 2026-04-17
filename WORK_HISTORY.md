@@ -307,6 +307,51 @@ pages have real state beyond rendered content.
 
 ---
 
+## 2026-04-16 — Ship a client-side "try it" before the real connector
+
+**Decision.** Build `/try.html` as a client-side-only demo that takes a
+`owner/repo` input, fetches `AGENT.md` from raw.githubusercontent.com,
+queries the unauthenticated GitHub API for PR merge/close counts and
+commit activity, computes the four axes, and renders a live preview
+passport. No backend. No auth. Rate-limited to GitHub's 60 req/hour/IP.
+
+Also publish `docs/AGENT_MANIFEST_SCHEMA.md` (draft v0) as the manifest
+format the demo parses, and add a `AGENT.md` at the repo root so the
+demo has a self-referential example.
+
+**Why this instead of a full GitHub connector.** A full connector needs
+a backend (webhook-driven, OAuth-authenticated, persistent storage) and
+is weeks of work. A client-side demo turns the pitch from "static page
+about reputation" into "drop your repo URL in and see a real shape in
+10 seconds." That is the thing that closes a pilot conversation.
+Accuracy is lower (rate-limited, no signed telemetry, no long-term
+continuity), but the demo is explicit about that and the honest-absence
+display ("insufficient evidence" / capped autonomy) is on-brand.
+
+**Alternatives considered.**
+- *Full Vercel-serverless connector*: 2-3 days of work, requires API key
+  management, doesn't demo any faster. Deferred.
+- *Pre-computed sample agents only*: already shipped (10 of them). The
+  remaining gap was "does this work on a repo I care about?" — the demo
+  closes that.
+- *Read-only MCP server*: roadmap item, not pilot-critical.
+
+**Defensible if challenged.**
+- "Rate-limited, so the demo dies under load." → Yes. The demo page is
+  explicit about the rate limit. A successful outreach that triggers
+  traffic beyond the limit is a good problem to have and flips the
+  decision on building the real backend.
+- "AGENT.md format is draft v0 — fragile if we change it later." → The
+  draft label is visible in the docs and on the demo. We version the
+  schema and publish migration notices. Open Badges did the same going
+  from 2.0 to 3.0.
+- "A demo that returns low numbers is bad marketing." → Correct only if
+  we hide that the numbers are low because confidence is capped. The
+  demo shows the cap ("no harness telemetry yet"), which is the same
+  story the pricing page tells. Consistency with the pitch wins here.
+
+---
+
 ## 2026-04-16 — GitHub-first for first verified-work connector
 
 **Decision.** The first integrated connector is GitHub (PR/commit/CI/release)

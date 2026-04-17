@@ -40,6 +40,7 @@ const pages = [
   { html: 'agent-lexa-legal.html', entry: '/src/pages/agent-lexa-legal.js' },
   { html: 'changelog.html', entry: '/src/pages/changelog.js' },
   { html: 'roadmap.html', entry: '/src/pages/roadmap.js' },
+  { html: 'try.html', entry: '/src/pages/try.js' },
 ];
 
 function setupDocument(html) {

@@ -1,11 +1,11 @@
 const navLinks = [
   { href: '/', label: 'Home' },
+  { href: '/try.html', label: 'Try it' },
   { href: '/agents.html', label: 'Agents' },
   { href: '/leaderboard.html', label: 'Leaderboard' },
   { href: '/for-agents.html', label: 'For agents' },
   { href: '/for-relying-parties.html', label: 'For relying parties' },
   { href: '/pricing.html', label: 'Pricing' },
-  { href: '/how-it-works.html', label: 'How it works' },
 ];
 
 const footerLinks = [
