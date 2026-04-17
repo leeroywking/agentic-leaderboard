@@ -1,0 +1,8 @@
+Contact: mailto:security@agenticleaderboard.org
+Expires: 2027-04-16T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://agenticleaderboard.org/.well-known/security.txt
+Policy: https://agenticleaderboard.org/legal.html
+
+# Responsible disclosures are credited publicly.
+# Please include a proof of concept and the affected surface.
